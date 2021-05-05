@@ -1,0 +1,4 @@
+name: Speedrun
+version: @version@
+main: de.hglabor.speedrun.Speedrun
+api-version: 1.16
