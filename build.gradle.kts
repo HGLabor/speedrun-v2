@@ -28,7 +28,8 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
+    // AnvilGUI
+    maven("https://repo.codemc.io/repository/maven-snapshots/")
     // Paper
     maven("https://papermc.io/repo/repository/maven-public/")
 }
