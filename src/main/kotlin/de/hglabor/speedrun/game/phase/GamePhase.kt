@@ -11,6 +11,7 @@ import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Sound
 import org.bukkit.event.Listener
 import java.util.*
 
@@ -22,6 +23,7 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
     private var finishedPlayers = ArrayList<UUID>()
     var timeHeading: String = "Starting in:"
     var time: Long = 0L
+    var roundNumber = 0
 
     private val startDuration: Long = 3 // 3 seconds
 
@@ -43,7 +45,10 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
         }
     }
 
+    private fun isFinished() = rounds != -1L && roundNumber >= rounds
+
     private fun startRoundTask() {
+        roundNumber++
         val wholeDuration = startDuration+preparationDuration+roundDuration
         currentTask?.cancel()
         currentTask = task(
@@ -62,21 +67,22 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
                 }
                 startDuration -> {
                     Bukkit.broadcastMessage("${ChatColor.GREEN}Starting.")
+                    UserList.players.forEach { player -> player.playSound(player.location, Sound.ENTITY_EVOKER_CAST_SPELL, 1F, 0F) }
                     UserList.clearAndCloseAllInvs()
                     startPreparationPhase()
+                    onPrepStart()
                     timeHeading = "Preparation Time:"
                 }
                 ingameStart -> {
                     Bukkit.broadcastMessage("${ChatColor.GREEN}Starting ingame phase.")
                     UserList.clearAndCloseAllInvs()
+                    UserList.players.forEach { player -> player.playSound(player.location, Sound.BLOCK_BEEHIVE_ENTER, 1F, 0F) }
                     startIngamePhase()
                     timeHeading = "Time:"
                 }
                 wholeDuration+1 -> {
                     Bukkit.broadcastMessage("${ChatColor.RED}Round stopping.")
-                    startRoundTask()
-                    timeHeading = "Starting in:"
-                    time = 0
+                    onStop()
                 }
             }
             when {
@@ -96,6 +102,17 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
     }
 
     open fun onNewStart() {}
+    open fun onPrepStart() {}
+    private fun onStop() {
+        if (isFinished()) {
+            finishPhase()
+        }
+        else {
+            timeHeading = "Starting in:"
+            time = 0
+            startRoundTask()
+        }
+    }
 
     abstract fun getGameState(): GameState
 

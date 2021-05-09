@@ -5,6 +5,7 @@ import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
+import net.axay.kspigot.extensions.bukkit.actionBar
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
@@ -39,6 +40,12 @@ class CraftingPhase : GamePhase(ROUNDS, PREPARATION_DURATION, ROUND_DURATION) {
         itemToCraft = null // make getScoreboardContent return "Getting random item..."
     }
 
+    override fun onPrepStart() {
+        UserList.players.forEach {
+            it.sendTitle("§6Round $roundNumber", "§cCraft a §b${itemToCraft?.type?.name}", 20, 45, 20)
+            it.actionBar("Good Luck!");
+        }
+    }
 
     /*@EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
