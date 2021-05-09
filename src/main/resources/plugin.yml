@@ -1,4 +1,9 @@
 name: Speedrun
-version: @version@
+version: 0.0.1
 main: de.hglabor.speedrun.Speedrun
 api-version: 1.16
+
+commands:
+  next:
+    description: Skips the phase
+    usage: /next
