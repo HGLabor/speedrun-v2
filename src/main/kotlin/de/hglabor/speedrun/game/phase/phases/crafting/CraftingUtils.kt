@@ -59,7 +59,7 @@ object CraftingUtils {
         when (itemStack.type) {
             Material.FISHING_ROD -> {
                 itemStacks.add(Material.OAK_LOG.stack())
-                itemStacks.add(Material.STRING.stack())
+                itemStacks.add(Material.STRING.stack(2))
                 return itemStacks
             }
             Material.RED_BED -> {
