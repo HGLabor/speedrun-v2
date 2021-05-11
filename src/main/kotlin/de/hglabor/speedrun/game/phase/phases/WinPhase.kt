@@ -38,7 +38,7 @@ class WinPhase : GamePhase(0, -1, -1) {
     override fun getScoreboardHeading(): String = "Winner:"
     override fun getScoreboardContent(): String = ChatColor.AQUA.toString() + winners[0].player.displayName
 
-    override fun getGameState(): GameState = GameState.WIN
+    override fun getGameState(): GameState = GameState.Win
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) { PLUGIN.updateScoreboards() }

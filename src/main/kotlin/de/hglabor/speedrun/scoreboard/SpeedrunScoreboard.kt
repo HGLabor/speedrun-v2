@@ -52,7 +52,7 @@ object SpeedrunScoreboard {
                 ScoreboardFactory.updateEntry(player, disciplineHeadingName, "Players:")
                 ScoreboardFactory.updateEntry(player, disciplineName, "${UserList.size}/${Config.MIN_PLAYERS.get()}".col(if(players>=Config.MIN_PLAYERS.get()) "green" else "yellow") + " (max ${MAX_PLAYERS})")
             }
-            GameState.WIN -> {
+            GameState.Win -> {
                 ScoreboardFactory.updateEntry(player, disciplineHeadingName, "${ChatColor.GOLD}GAME END")
                 ScoreboardFactory.updateEntry(player, disciplineName, "")
             }

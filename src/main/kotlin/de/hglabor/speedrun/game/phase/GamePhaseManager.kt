@@ -22,7 +22,7 @@ object GamePhaseManager {
         when(currentPhase.getGameState()) {
             GameState.Lobby -> setPhase(CraftingPhase::class)
             GameState.Crafting -> setPhase(WinPhase::class)
-            GameState.WIN -> setPhase(LobbyPhase::class)
+            GameState.Win -> setPhase(LobbyPhase::class)
         }
     }
 
