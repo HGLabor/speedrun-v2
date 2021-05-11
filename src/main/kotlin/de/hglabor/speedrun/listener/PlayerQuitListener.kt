@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 fun quitListener() {
     listen<PlayerQuitEvent> {
         val players = UserList.size
-        it.quitMessage = "<< ".col("bold", "red") + it.player.displayName.col("gray")
+        it.quitMessage = "<< ".col("bold", "red") + it.player.displayName.col("gray") +
                 (" ($players/${Config.MIN_PLAYERS.getInt()})").col(if(players>=Config.MIN_PLAYERS.getInt()) "green" else "yellow")
         if (UserList.size < Config.MIN_PLAYERS.getInt() && GamePhaseManager.currentState != GameState.Lobby) {
             // Cancel game
