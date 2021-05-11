@@ -7,3 +7,8 @@ commands:
   next:
     description: Skips the phase
     usage: /next
+    permission: group.admin
+  speedrun-reload:
+    description: Reloads the speedrun config
+    usage: /speedrun-reload
+    permission: group.admin
