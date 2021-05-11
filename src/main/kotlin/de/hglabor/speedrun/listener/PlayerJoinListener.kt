@@ -22,7 +22,7 @@ fun joinListener() {
     }
 
     listen<PlayerLoginEvent> {
-        if (GamePhaseManager.currentState == GameState.Lobby) {
+        if (GamePhaseManager.currentState != GameState.Lobby) {
             it.disallow(PlayerLoginEvent.Result.KICK_OTHER, "${ChatColor.RED}The game has already started.")
         }
     }
