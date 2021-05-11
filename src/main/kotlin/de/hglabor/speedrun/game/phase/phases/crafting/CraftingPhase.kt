@@ -21,7 +21,10 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
 
     override fun startPreparationPhase() {
+        itemToCraft = CraftingUtils.randomItemToCraft.stack()
         UserList.players.forEach { player ->
+            player.sendTitle("§6Round $roundNumber", "§cCraft (a) §b${itemToCraft?.type?.name}", 20, 45, 20)
+            player.actionBar("Good Luck!")
             repeat(9) {
                 player.inventory.setItem(it, itemToCraft)
             }
@@ -34,17 +37,8 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     override fun getGameState(): GameState = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
-    override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (if (isPreparation()) itemToCraft?.type?.name else "Getting random item...")
-    override fun onNewStart() {
-        itemToCraft = CraftingUtils.randomItemToCraft.stack()
-    }
-
-    override fun onPrepStart() {
-        UserList.players.forEach {
-            it.sendTitle("§6Round $roundNumber", "§cCraft (a) §b${itemToCraft?.type?.name}", 20, 45, 20)
-            it.actionBar("Good Luck!");
-        }
-    }
+    override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "")
+    override fun onNewStart() { itemToCraft = null }
 
     override fun broadcastRoundInfo() {
         grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}")

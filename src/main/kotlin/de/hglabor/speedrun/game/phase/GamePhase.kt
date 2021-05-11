@@ -79,13 +79,12 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
                 startDuration -> {
                     broadcastLine()
                     grayBroadcast("$PREFIX Round ${roundNumber.toString().col("bold", "aqua")}")
-                    broadcastRoundInfo()
-                    broadcastLine()
                     UserList.players.forEach { player -> player.playSound(player.location, Sound.ENTITY_EVOKER_CAST_SPELL, 1F, 0F) }
                     UserList.clearAndCloseAllInvs()
                     activePhase = Phase.PREPARATION
                     startPreparationPhase()
-                    onPrepStart()
+                    broadcastRoundInfo()
+                    broadcastLine()
                     timeHeading = "Preparation Time:"
                 }
                 ingameStart -> {
@@ -117,7 +116,6 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
     }
 
     open fun onNewStart() {}
-    open fun onPrepStart() {}
     open fun broadcastRoundInfo() {}
 
     private fun onStop() {
@@ -134,7 +132,6 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
 
     abstract fun getGameState(): GameState
 
-    fun isPreparation(): Boolean = activePhase == Phase.PREPARATION
     fun isIngame(): Boolean = activePhase == Phase.INGAME
 
     abstract fun startPreparationPhase()
