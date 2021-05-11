@@ -3,6 +3,7 @@ package de.hglabor.speedrun.utils
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import de.hglabor.speedrun.worlds.Worlds
+import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -76,3 +77,5 @@ fun String.col(vararg colorNames: String): String {
 }
 
 fun colorFromName(name: String): ChatColor = ChatColor.valueOf(name.toUpperCase())
+
+fun Location.addY(y: Number) = this.clone().add(0, y, 0)

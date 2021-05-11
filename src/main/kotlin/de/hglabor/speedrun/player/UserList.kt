@@ -10,7 +10,6 @@ import java.util.*
 
 object UserList : HashMap<UUID, SpeedRunner>() {
     fun init() {
-        Bukkit.broadcastMessage("init called");
         listen<PlayerJoinEvent> {
             this.getOrPut(it.player.uniqueId) { SpeedRunner(it.player.uniqueId) }
         }

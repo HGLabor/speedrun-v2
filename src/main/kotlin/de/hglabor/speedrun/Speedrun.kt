@@ -14,6 +14,7 @@ import de.hglabor.speedrun.utils.clearInv
 import de.hglabor.speedrun.utils.survival
 import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
+import de.hglabor.speedrun.worlds.createWorldStructures
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.event.player.PlayerJoinEvent
@@ -42,6 +43,7 @@ class Speedrun : KSpigot() {
         getCommand("speedrun-reload")?.setExecutor(ReloadCommand())
 
         Worlds.createWorlds()
+        createWorldStructures()
 
         listen<PlayerJoinEvent> {
             it.player.teleport(LOBBY_SPAWN)

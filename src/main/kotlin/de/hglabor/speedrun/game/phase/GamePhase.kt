@@ -45,13 +45,17 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
         taskRunLater(20L) {
             UserList.players.forEach { player ->
                 SoundUtils.playTeleportSound(player)
-                player.teleportToWorld(getGameState().name)
                 player.survival()
             }
+            teleportPlayers()
         }
         if (roundDuration != -1) {
             startRoundTask()
         }
+    }
+
+    open fun teleportPlayers() {
+        UserList.players.forEach { it.teleportToWorld(getGameState().name) }
     }
 
     private fun isFinished() = rounds != -1 && roundNumber >= rounds
@@ -70,6 +74,7 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
                 1L -> {
                     UserList.clearAndCloseAllInvs()
                     onNewStart()
+                    teleportPlayers()
                     UserList.players.forEach { player ->
                         player.noMove(3)
                         player.survival()

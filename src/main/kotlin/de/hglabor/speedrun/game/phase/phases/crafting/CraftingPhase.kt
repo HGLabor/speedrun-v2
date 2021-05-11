@@ -9,6 +9,9 @@ import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.addToInv
 import de.hglabor.speedrun.utils.grayBroadcast
 import de.hglabor.speedrun.utils.stack
+import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
+import de.hglabor.utils.noriskutils.SoundUtils
+import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
@@ -18,7 +21,6 @@ import org.bukkit.inventory.ItemStack
 
 class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING_PREP_TIME.getInt(), Config.CRAFTING_INGAME_TIME.getInt()) {
     private var itemToCraft: ItemStack? = null
-
 
     override fun startPreparationPhase() {
         itemToCraft = CraftingUtils.randomItemToCraft.stack()
@@ -42,6 +44,13 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     override fun broadcastRoundInfo() {
         grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}")
+    }
+
+    override fun teleportPlayers() {
+        UserList.players.forEachIndexed { index, player ->
+            player.teleport(CRAFTING_SPAWNS!!.shuffled()[index])
+            SoundUtils.playTeleportSound(player)
+        }
     }
 
     @EventHandler
