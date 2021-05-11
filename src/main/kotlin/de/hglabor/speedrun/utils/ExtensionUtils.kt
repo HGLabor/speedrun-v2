@@ -10,7 +10,6 @@ import org.bukkit.event.Cancellable
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.lang.reflect.Field
 
 fun Entity.isCreative(): Boolean = this is Player && this.gameMode == GameMode.CREATIVE
 

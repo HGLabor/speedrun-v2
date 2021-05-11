@@ -7,7 +7,6 @@ import de.hglabor.speedrun.utils.spectator
 import net.axay.kspigot.extensions.bukkit.actionBar
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import java.util.*
