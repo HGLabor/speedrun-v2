@@ -22,7 +22,7 @@ import java.util.*
 
 abstract class GamePhase(private var rounds: Int, private var preparationDuration: Int, private var roundDuration: Int) : Listener {
     private var activePhase = Phase.PREPARATION
-    private var currentTask: KSpigotRunnable? = null
+    var currentTask: KSpigotRunnable? = null
     private var finishedPlayers = ArrayList<UUID>()
     var timeHeading: String = "Starting in:"
     var time: Long = 0L

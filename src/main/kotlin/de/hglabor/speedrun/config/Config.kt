@@ -15,23 +15,25 @@ enum class Config(private val path: String, value: Any) {
     RESTART_TIME("restartAfter", 30),
     DO_RESTART("doRestart", true);
 
-    private val mValue: Any get() = PLUGIN.config.get(this.path)!!;
+    private val configValue: Any get() = PLUGIN.config.get(this.path) ?: this.mValue
+    private var mValue: Any = value
 
     companion object {
         fun load() {
-            values().forEach { PLUGIN.config.addDefault(it.path, it.mValue) }
+            values().forEach { PLUGIN.config.addDefault(it.path, it.configValue) }
             PLUGIN.config.options().copyDefaults(true)
             PLUGIN.saveConfig()
         }
     }
 
     fun set(value: Int) {
+        mValue = value
         PLUGIN.config.set(this.path, value)
         PLUGIN.saveConfig()
     }
 
-    fun getInt(): Int = this.mValue as Int
-    fun getBoolean(): Boolean = this.mValue as Boolean
+    fun getInt(): Int = this.configValue as Int
+    fun getBoolean(): Boolean = this.configValue as Boolean
 
     fun reload() { PLUGIN.reloadConfig() }
 }

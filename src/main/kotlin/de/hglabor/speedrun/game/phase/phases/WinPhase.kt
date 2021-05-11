@@ -34,7 +34,7 @@ class WinPhase : GamePhase(0, -1, -1) {
         if (Config.DO_RESTART.getBoolean()) {
             timeHeading = "Restarting in:"
             val seconds = Config.RESTART_TIME.getInt().toLong()
-            task(howOften = seconds + 1, period = 20L) {
+            currentTask = task(howOften = seconds + 1, period = 20L) {
                 time = seconds - it.counterUp!!.toLong()
                 when (time) {
                     in 1..5 -> {
