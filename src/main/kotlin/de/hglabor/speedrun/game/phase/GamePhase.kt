@@ -12,6 +12,7 @@ import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
+import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -42,7 +43,7 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
             player.sendTitle(getGameState().name.col("red"), "", 5, 10, 5)
         }
         // Teleport players delayed and set gamemode to survival
-        task(howOften = 1L, delay = 10L) {
+        taskRunLater(20L) {
             UserList.players.forEach { player ->
                 SoundUtils.playTeleportSound(player)
                 player.teleportToWorld(getGameState().name)
@@ -123,7 +124,7 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
     private fun onStop() {
         if (isFinished()) {
             finishRound()
-            finishPhaseDelayed()
+            currentTask = finishPhaseDelayed()
         }
         else {
             timeHeading = "Starting in:"
@@ -173,40 +174,36 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
             finishedPlayers.clear()
             if (isFinished()) {
                 // No more rounds
-                finishPhaseDelayed()
+                currentTask = finishPhaseDelayed()
                 return
             }
-            startRoundTaskDelayed()
+            currentTask = startRoundTaskDelayed()
         }
     }
 
     /**
      * @param delay the delay in seconds
      */
-    private fun startRoundTaskDelayed(delay: Long = 3) {
-        task(howOften = delay+1, period = 20L) {
+    private fun startRoundTaskDelayed(delay: Long = 3): KSpigotRunnable = task(howOften = delay+1, period = 20L) {
             timeHeading = "Next Round:"
             time = delay-it.counterUp!!+1
             PLUGIN.updateScoreboards()
             if (it.counterUp == delay+1) {
                 startRoundTask()
             }
-        }
-    }
+        }!!
 
     /**
      * @param delay the delay in seconds
      */
-    private fun finishPhaseDelayed(delay: Long = 5) {
-        task(howOften = delay+1, period = 20L) {
+    private fun finishPhaseDelayed(delay: Long = 5) = task(howOften = delay+1, period = 20L) {
             timeHeading = "Next Discipline:"
             time = delay-it.counterUp!!+1
             PLUGIN.updateScoreboards()
             if (it.counterUp == delay+1) {
                 finishPhase()
             }
-        }
-    }
+        }!!
 
     private fun finishPhase() {
         GamePhaseManager.nextPhase()
