@@ -11,16 +11,15 @@ import de.hglabor.speedrun.utils.broadcastLine
 import de.hglabor.speedrun.utils.col
 import de.hglabor.speedrun.utils.grayBroadcast
 import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
-import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerJoinEvent
 
 
 class WinPhase : GamePhase(0, -1, -1) {
     private val winners = sortPlayersBestTime()
+    private var winTask: KSpigotRunnable? = null
 
     init {
         broadcastLine()
@@ -34,7 +33,7 @@ class WinPhase : GamePhase(0, -1, -1) {
         if (Config.DO_RESTART.getBoolean()) {
             timeHeading = "Restarting in:"
             val seconds = Config.RESTART_TIME.getInt().toLong()
-            currentTask = task(howOften = seconds + 1, period = 20L) {
+            winTask = task(howOften = seconds + 1, period = 20L) {
                 time = seconds - it.counterUp!!.toLong()
                 when (time) {
                     in 1..5 -> {
@@ -57,6 +56,11 @@ class WinPhase : GamePhase(0, -1, -1) {
         }
     }
 
+    override fun stop() {
+        super.stop()
+        winTask?.cancel()
+    }
+
     private fun broadcastWinner(i: Int) {
         val speedRunner = winners[i]
         broadcast("$PREFIX ${ChatColor.GOLD}${i+1}. ${ChatColor.AQUA}${speedRunner.name} " +
@@ -69,9 +73,6 @@ class WinPhase : GamePhase(0, -1, -1) {
     override fun getScoreboardContent(): String = ChatColor.AQUA.toString() + winners[0].player.displayName
 
     override fun getGameState(): GameState = GameState.Win
-
-    @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) { PLUGIN.updateScoreboards() }
 
     private fun sortPlayersBestTime(): List<SpeedRunner> = UserList.values.sortedWith { s1, s2 -> (s1.timeNeededTotal - s2.timeNeededTotal).toInt() }
 }

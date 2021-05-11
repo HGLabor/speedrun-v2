@@ -15,14 +15,13 @@ import net.axay.kspigot.runnables.task
 import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.event.Listener
 import java.util.*
 
 abstract class GamePhase(private var rounds: Int, private var preparationDuration: Int, private var roundDuration: Int) : Listener {
     private var activePhase = Phase.PREPARATION
-    var currentTask: KSpigotRunnable? = null
+    private var currentTask: KSpigotRunnable? = null; set(value) { broadcast("set current task"); field = value }
     private var finishedPlayers = ArrayList<UUID>()
     var timeHeading: String = "Starting in:"
     var time: Long = 0L
@@ -143,7 +142,7 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
     abstract fun getScoreboardHeading(): String
     abstract fun getScoreboardContent(): String
 
-    fun stop() {
+    open fun stop() {
         unregister() // Unregister this as event listener
         currentTask?.cancel()
     }
