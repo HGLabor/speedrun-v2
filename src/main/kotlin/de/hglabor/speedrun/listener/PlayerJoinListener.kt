@@ -16,7 +16,7 @@ fun joinListener() {
     listen<PlayerJoinEvent> {
         val playerCount = UserList.size
         it.joinMessage = ">> ".col("green", "bold") + it.player.displayName.col("gray") +
-                (" ($playerCount/${Config.MIN_PLAYERS.get()})").col(if (playerCount >= Config.MIN_PLAYERS.get()) "green" else "yellow")
+                (" ($playerCount/${Config.MIN_PLAYERS.getInt()})").col(if (playerCount >= Config.MIN_PLAYERS.getInt()) "green" else "yellow")
         it.player.createScoreboard()
         it.player.updateScoreboard()
     }

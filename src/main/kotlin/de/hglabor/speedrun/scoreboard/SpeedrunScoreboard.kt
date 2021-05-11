@@ -50,7 +50,7 @@ object SpeedrunScoreboard {
             GameState.Lobby -> {
                 val players = UserList.size
                 ScoreboardFactory.updateEntry(player, disciplineHeadingName, "Players:")
-                ScoreboardFactory.updateEntry(player, disciplineName, "${UserList.size}/${Config.MIN_PLAYERS.get()}".col(if(players>=Config.MIN_PLAYERS.get()) "green" else "yellow") + " (max ${MAX_PLAYERS})")
+                ScoreboardFactory.updateEntry(player, disciplineName, "${UserList.size}/${Config.MIN_PLAYERS.getInt()}".col(if(players>=Config.MIN_PLAYERS.getInt()) "green" else "yellow") + " (max ${MAX_PLAYERS})")
             }
             GameState.Win -> {
                 ScoreboardFactory.updateEntry(player, disciplineHeadingName, "${ChatColor.GOLD}GAME END")

@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.inventory.ItemStack
 
 
-class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.get(), Config.CRAFTING_PREP_TIME.get(), Config.CRAFTING_INGAME_TIME.get()) {
+class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING_PREP_TIME.getInt(), Config.CRAFTING_INGAME_TIME.getInt()) {
     private var itemToCraft: ItemStack? = null
 
 

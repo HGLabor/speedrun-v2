@@ -15,8 +15,8 @@ fun quitListener() {
     listen<PlayerQuitEvent> {
         val players = UserList.size
         it.quitMessage = "<< ".col("bold", "red") + it.player.displayName.col("gray")
-                (" ($players/${Config.MIN_PLAYERS.get()})").col(if(players>=Config.MIN_PLAYERS.get()) "green" else "yellow")
-        if (UserList.size < Config.MIN_PLAYERS.get() && GamePhaseManager.currentState != GameState.Lobby) {
+                (" ($players/${Config.MIN_PLAYERS.getInt()})").col(if(players>=Config.MIN_PLAYERS.getInt()) "green" else "yellow")
+        if (UserList.size < Config.MIN_PLAYERS.getInt() && GamePhaseManager.currentState != GameState.Lobby) {
             // Cancel game
             Bukkit.broadcastMessage("${ChatColor.RED}Cancelled game (not enough players: ${UserList.size})")
             GamePhaseManager.setPhase(LobbyPhase::class)
