@@ -1,10 +1,12 @@
 package de.hglabor.speedrun
 
 import de.hglabor.speedrun.command.NextPhaseCommand
+import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.listener.lobbyListener
 import de.hglabor.speedrun.listener.mainListener
 import de.hglabor.speedrun.listener.joinListener
+import de.hglabor.speedrun.listener.quitListener
 import de.hglabor.speedrun.location.LOBBY_SPAWN
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.clearInv
@@ -26,11 +28,13 @@ class Speedrun : KSpigot() {
     }
 
     override fun startup() {
+        Config.load()
         UserList.init()
 
         mainListener()
         lobbyListener()
         joinListener()
+        quitListener()
 
         getCommand("next")?.setExecutor(NextPhaseCommand())
 

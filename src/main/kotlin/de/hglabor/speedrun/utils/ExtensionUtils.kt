@@ -3,17 +3,14 @@ package de.hglabor.speedrun.utils
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import de.hglabor.speedrun.worlds.Worlds
-import de.hglabor.utils.noriskutils.scoreboard.ScoreboardFactory
-import org.bukkit.GameMode
-import org.bukkit.GameRule
-import org.bukkit.Material
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.lang.reflect.Field
 
 fun Entity.isCreative(): Boolean = this is Player && this.gameMode == GameMode.CREATIVE
 
@@ -55,6 +52,9 @@ fun Player.teleportToWorld(worldName: String) {
     this.teleport(Worlds[worldName]!!.spawnLocation)
 }
 
+fun Player.survival() { this.gameMode = GameMode.SURVIVAL }
+fun Player.spectator() { this.gameMode = GameMode.SPECTATOR }
+
 fun Material.stack(): ItemStack = ItemStack(this)
 fun Material.stack(amount: Int): ItemStack = ItemStack(this, amount)
 
@@ -67,3 +67,13 @@ fun World.speedrunGameRules(): World {
     this.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
     return this
 }
+
+// Easy string colors
+
+fun String.col(vararg colorNames: String): String {
+    var prefix = ""
+    colorNames.forEach { prefix += colorFromName(it) }
+    return prefix + this + ChatColor.RESET.toString() + ChatColor.WHITE.toString()
+}
+
+fun colorFromName(name: String): ChatColor = ChatColor.valueOf(name.toUpperCase())

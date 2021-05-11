@@ -4,6 +4,7 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.phases.crafting.CraftingPhase
 import de.hglabor.speedrun.game.phase.phases.LobbyPhase
+import de.hglabor.speedrun.game.phase.phases.WinPhase
 import de.hglabor.speedrun.player.UserList
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -20,7 +21,8 @@ object GamePhaseManager {
     fun nextPhase() {
         when(currentPhase.getGameState()) {
             GameState.Lobby -> setPhase(CraftingPhase::class)
-            GameState.Crafting -> setPhase(LobbyPhase::class)
+            GameState.Crafting -> setPhase(WinPhase::class)
+            GameState.WIN -> setPhase(LobbyPhase::class)
         }
     }
 
@@ -33,6 +35,9 @@ object GamePhaseManager {
 
         // Start/Return next phase
         currentPhase = cl.createInstance()
+
+        PLUGIN.updateScoreboards()
+
         return currentPhase
     }
 }

@@ -11,12 +11,13 @@ import java.util.*
 class SpeedRunner : ScoreboardPlayer {
     val uuid: UUID
     val name: String?
-    var timeNeededTotal = 0.0
-        set(add) { timeNeededTotal += add }
-    var timeNeeded = 0.0
+    var timeNeededTotal: Float = 0.0F
+    var timeNeeded: Float = 0.0F
     private var status: Status? = null
     private var mScoreboard: Scoreboard? = null
     private var mObjective: Objective? = null
+
+    fun addTotalTime(time: Float) { timeNeededTotal += time }
 
     enum class Status {
         PLAYER, SPECTATOR

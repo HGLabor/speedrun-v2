@@ -1,8 +1,9 @@
 package de.hglabor.speedrun.player
 
-import de.hglabor.speedrun.config.Config
+import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhaseManager
+import de.hglabor.speedrun.utils.spectator
 import net.axay.kspigot.extensions.bukkit.actionBar
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -10,7 +11,6 @@ import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -36,11 +36,11 @@ class PlayerLogic {
     fun setTimeIfNotFinished() {
         if (GamePhaseManager.currentPhase.isIngame()) {
             val timeNeeded = System.currentTimeMillis()
-            val elapsedTime: Long = timeNeeded - GamePhaseManager.currentPhase.startTime
+            val elapsedTime: Long = timeNeeded - GamePhaseManager.currentPhase.startMillis!!
             for (uuid: UUID in playerFinished.keys) {
                 if (!playerFinished[uuid]!!) {
                     val speedRunner: SpeedRunner = UserList[uuid]!!
-                    speedRunner.timeNeeded = elapsedTime / 1000.0
+                    speedRunner.timeNeeded = elapsedTime / 1000.0F
                     val player = Bukkit.getPlayer(uuid)
                     player?.playSound(player.location, Sound.ENTITY_PLAYER_HURT, 1F, 0F)
                 }
@@ -64,20 +64,20 @@ class PlayerLogic {
             finishedPlayers.add(player.uniqueId)
             val speedRunner: SpeedRunner = UserList.get(player)!!
             val timeNeeded = System.currentTimeMillis()
-            val elapsedTime: Long = timeNeeded - GamePhaseManager.currentPhase.startTime
-            speedRunner.timeNeeded = elapsedTime / 1000.0
+            val elapsedTime: Long = timeNeeded - GamePhaseManager.currentPhase.startMillis!!
+            speedRunner.timeNeeded = elapsedTime / 1000.0F
             player.actionBar("§6Time needed: §e" + speedRunner.timeNeeded.toString() + "s")
             player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
-            Bukkit.broadcastMessage(Config.getPrefix() + ChatColor.GOLD + (finishedPlayers.indexOf(player.uniqueId) + 1).toString() + "." + " " + ChatColor.AQUA.toString() + player.name)
+            Bukkit.broadcastMessage(PREFIX + ChatColor.GOLD + (finishedPlayers.indexOf(player.uniqueId) + 1).toString() + "." + " " + ChatColor.AQUA.toString() + player.name)
             if (GamePhaseManager.currentState != GameState.Crafting) {
-                player.gameMode = GameMode.SPECTATOR
+                player.spectator()
             }
             //HideUtils.showAllPlayer(player) //TODO create HideUtils
             checkIfEveryoneIsFinished()
         }
     }
 
-    fun checkIfEveryoneIsFinished() {
+    private fun checkIfEveryoneIsFinished() {
         if (GamePhaseManager.currentState == GameState.Crafting) {
             return
         }
@@ -113,22 +113,22 @@ class PlayerLogic {
             for (i in 0..9) {
                 val speedRunner: SpeedRunner = winnerList[i]
                 Bukkit.broadcastMessage(
-                    Config.getPrefix() + ChatColor.GOLD.toString() + "" + (i + 1).toString() + "." + " " + ChatColor.AQUA + speedRunner.name +
+                    PREFIX + ChatColor.GOLD.toString() + "" + (i + 1).toString() + "." + " " + ChatColor.AQUA + speedRunner.name +
                             ChatColor.GRAY.toString() + " | " + ChatColor.RED.toString() + "Total time: " + ChatColor.YELLOW.toString() + "" + String.format(
                         "%.3f",
                         speedRunner.timeNeededTotal
-                    ).toString() + "s"
+                    ) + "s"
                 )
             }
         } else {
             for (i in winnerList.indices) {
                 val speedRunner: SpeedRunner = winnerList[i]
                 Bukkit.broadcastMessage(
-                    (Config.getPrefix() + ChatColor.GOLD.toString() + "" + (i + 1).toString() + "." + " " + ChatColor.AQUA + speedRunner.name +
+                    (PREFIX + ChatColor.GOLD.toString() + "" + (i + 1).toString() + "." + " " + ChatColor.AQUA + speedRunner.name +
                             ChatColor.GRAY.toString() + " | " + ChatColor.RED.toString() + "Total time: " + ChatColor.YELLOW.toString() + "" + String.format(
                         "%.3f",
                         speedRunner.timeNeededTotal
-                    ).toString() + "s")
+                    ) + "s")
                 )
             }
         }

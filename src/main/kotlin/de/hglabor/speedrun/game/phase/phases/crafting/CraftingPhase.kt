@@ -1,5 +1,7 @@
 package de.hglabor.speedrun.game.phase.phases.crafting
 
+import de.hglabor.speedrun.config.Config
+import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
@@ -12,16 +14,11 @@ import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.inventory.ItemStack
 
 
-class CraftingPhase : GamePhase(ROUNDS, PREPARATION_DURATION, ROUND_DURATION) {
-    companion object {
-        const val ROUNDS: Long = 3
-        const val ROUND_DURATION: Long = 30L // 30 seconds
-        const val PREPARATION_DURATION: Long = 10L // 10 seconds
-    }
+class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.get(), Config.CRAFTING_PREP_TIME.get(), Config.CRAFTING_INGAME_TIME.get()) {
     private var itemToCraft: ItemStack? = null
 
+
     override fun startPreparationPhase() {
-        itemToCraft = CraftingUtils.randomItemToCraft.stack()
         UserList.players.forEach { player ->
             repeat(9) {
                 player.inventory.setItem(it, itemToCraft)
@@ -35,24 +32,21 @@ class CraftingPhase : GamePhase(ROUNDS, PREPARATION_DURATION, ROUND_DURATION) {
 
     override fun getGameState(): GameState = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
-    override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "Getting random item...")
+    override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (if (isPreparation()) itemToCraft?.type?.name else "Getting random item...")
     override fun onNewStart() {
-        itemToCraft = null // make getScoreboardContent return "Getting random item..."
+        itemToCraft = CraftingUtils.randomItemToCraft.stack()
     }
 
     override fun onPrepStart() {
         UserList.players.forEach {
-            it.sendTitle("§6Round $roundNumber", "§cCraft a §b${itemToCraft?.type?.name}", 20, 45, 20)
+            it.sendTitle("§6Round $roundNumber", "§cCraft (a) §b${itemToCraft?.type?.name}", 20, 45, 20)
             it.actionBar("Good Luck!");
         }
     }
 
-    /*@EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
-        if (GamePhaseManager.currentState == getGameState() && isPreparation()) {
-            event.cancel()
-        }
-    }*/
+    override fun broadcastRoundInfo() {
+        grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}")
+    }
 
     @EventHandler
     fun onCrafting(event: CraftItemEvent) {

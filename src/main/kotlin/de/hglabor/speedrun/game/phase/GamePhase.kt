@@ -1,29 +1,32 @@
 package de.hglabor.speedrun.game.phase
 
 import de.hglabor.speedrun.PLUGIN
+import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.noMove
-import de.hglabor.speedrun.utils.teleportToWorld
+import de.hglabor.speedrun.utils.*
+import de.hglabor.utils.noriskutils.SoundUtils
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
+import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.event.Listener
 import java.util.*
 
-abstract class GamePhase(private var rounds: Long, private var preparationDuration: Long, private var roundDuration: Long) : Listener {
+abstract class GamePhase(private var rounds: Int, private var preparationDuration: Int, private var roundDuration: Int) : Listener {
     private var activePhase = Phase.PREPARATION
     private var currentTask: KSpigotRunnable? = null
-    var startTime = 20
-    private var roundCounter: Long = 0
     private var finishedPlayers = ArrayList<UUID>()
     var timeHeading: String = "Starting in:"
     var time: Long = 0L
     var roundNumber = 0
+    var startMillis: Long? = null
 
     private val startDuration: Long = 3 // 3 seconds
 
@@ -34,18 +37,24 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
     init {
         register() // Register this as event listener
 
-        rounds *= 2
-
-        UserList.players.forEach {
-            it.sendMessage("Teleporting you to " + getGameState().name + " world")
-            it.teleportToWorld(getGameState().name)
+        // Display title
+        UserList.players.forEach { player ->
+            player.sendTitle(getGameState().name.col("red"), "", 5, 10, 5)
         }
-        if (roundDuration != -1L) {
+        // Teleport players delayed and set gamemode to survival
+        task(howOften = 1L, delay = 10L) {
+            UserList.players.forEach { player ->
+                SoundUtils.playTeleportSound(player)
+                player.teleportToWorld(getGameState().name)
+                player.survival()
+            }
+        }
+        if (roundDuration != -1) {
             startRoundTask()
         }
     }
 
-    private fun isFinished() = rounds != -1L && roundNumber >= rounds
+    private fun isFinished() = rounds != -1 && roundNumber >= rounds
 
     private fun startRoundTask() {
         roundNumber++
@@ -61,27 +70,33 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
                 1L -> {
                     UserList.clearAndCloseAllInvs()
                     onNewStart()
-                    UserList.players.forEach { player -> player.noMove(3) }
-                    Bukkit.broadcastMessage("${ChatColor.GREEN}Starting in 3 seconds.")
+                    UserList.players.forEach { player ->
+                        player.noMove(3)
+                        player.survival()
+                    }
                     timeHeading = "Starting in:"
                 }
                 startDuration -> {
-                    Bukkit.broadcastMessage("${ChatColor.GREEN}Starting.")
+                    broadcastLine()
+                    grayBroadcast("$PREFIX Round ${roundNumber.toString().col("bold", "aqua")}")
+                    broadcastRoundInfo()
+                    broadcastLine()
                     UserList.players.forEach { player -> player.playSound(player.location, Sound.ENTITY_EVOKER_CAST_SPELL, 1F, 0F) }
                     UserList.clearAndCloseAllInvs()
+                    activePhase = Phase.PREPARATION
                     startPreparationPhase()
                     onPrepStart()
                     timeHeading = "Preparation Time:"
                 }
                 ingameStart -> {
-                    Bukkit.broadcastMessage("${ChatColor.GREEN}Starting ingame phase.")
                     UserList.clearAndCloseAllInvs()
                     UserList.players.forEach { player -> player.playSound(player.location, Sound.BLOCK_BEEHIVE_ENTER, 1F, 0F) }
+                    activePhase = Phase.INGAME
                     startIngamePhase()
                     timeHeading = "Time:"
+                    startMillis = System.currentTimeMillis()
                 }
                 wholeDuration+1 -> {
-                    Bukkit.broadcastMessage("${ChatColor.RED}Round stopping.")
                     onStop()
                 }
             }
@@ -103,9 +118,12 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
 
     open fun onNewStart() {}
     open fun onPrepStart() {}
+    open fun broadcastRoundInfo() {}
+
     private fun onStop() {
         if (isFinished()) {
-            finishPhase()
+            finishRound()
+            finishPhaseDelayed()
         }
         else {
             timeHeading = "Starting in:"
@@ -132,44 +150,80 @@ abstract class GamePhase(private var rounds: Long, private var preparationDurati
     /** Get's called by subclass when a player has finished */
     fun finish(uuid: UUID) {
         finishedPlayers.add(uuid)
+        val player = Bukkit.getPlayer(uuid)!!
+        Bukkit.broadcastMessage("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${player.displayName}")
+        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
+        if (startMillis != null) {
+            val elapsedTime = (System.currentTimeMillis() - startMillis!!) / 1000F
+            player.actionBar("§6Time needed: §e" + elapsedTime + "s")
+            UserList[player.uniqueId]!!.addTotalTime(elapsedTime)
+        }
+        player.spectator()
         // If all players have finished
         if (finishedPlayers.size == UserList.size) {
-            finishedPlayers.clear()
             Bukkit.getLogger().info("Finishing because ${finishedPlayers.size} players have finished of a total of ${UserList.size} players.")
-            Bukkit.getLogger().info("Starting round $roundCounter earlier")
+            broadcast("$PREFIX ${ChatColor.GREEN}All players have finished.")
+            Bukkit.getLogger().info("Starting round $roundNumber earlier")
             // Cancel current task
             currentTask?.cancel()
 
             // Clear invs
             UserList.clearAndCloseAllInvs()
-
-            if (rounds-roundCounter == 0L) {
+            finishRound()
+            finishedPlayers.clear()
+            if (isFinished()) {
                 // No more rounds
-                finishPhase()
+                finishPhaseDelayed()
                 return
             }
-            Bukkit.getLogger().info("Setting howOften to ${rounds-roundCounter}")
-            finishRound()
+            startRoundTaskDelayed()
+        }
+    }
+
+    /**
+     * @param delay the delay in seconds
+     */
+    private fun startRoundTaskDelayed(delay: Long = 3) {
+        task(howOften = delay+1, period = 20L) {
+            timeHeading = "Next Round:"
+            time = delay-it.counterUp!!+1
             PLUGIN.updateScoreboards()
+            if (it.counterUp == delay+1) {
+                startRoundTask()
+            }
+        }
+    }
+
+    /**
+     * @param delay the delay in seconds
+     */
+    private fun finishPhaseDelayed(delay: Long = 5) {
+        task(howOften = delay+1, period = 20L) {
+            timeHeading = "Next Discipline:"
+            time = delay-it.counterUp!!+1
+            PLUGIN.updateScoreboards()
+            if (it.counterUp == delay+1) {
+                finishPhase()
+            }
         }
     }
 
     private fun finishPhase() {
-        Bukkit.getLogger().info("No more rounds left. Calling next phase.")
-        Bukkit.broadcastMessage("${ChatColor.YELLOW}Phase finished.")
-        Bukkit.broadcastMessage("${ChatColor.GREEN}Next phase starting in 5 seconds.")
-        timeHeading = "..."
-        time  = 0
-        PLUGIN.updateScoreboards()
-        task(delay = 20L*5) {
-            GamePhaseManager.nextPhase()
-        }
+        GamePhaseManager.nextPhase()
     }
 
     private fun finishRound() {
-        Bukkit.broadcastMessage("${ChatColor.YELLOW}Round finished.")
         timeHeading = ""
+        time  = 0
         PLUGIN.updateScoreboards()
-        startRoundTask()
+        val totalRoundTime = (System.currentTimeMillis() - startMillis!!) / 1000F
+        UserList.forEach {
+            if (!finishedPlayers.contains(it.key)) {
+                // Player has not finished in time. Add the total time to the player
+                it.value.addTotalTime(totalRoundTime)
+                // Set player's gamemode to spectator
+                it.value.player.spectator()
+            }
+        }
     }
 }
