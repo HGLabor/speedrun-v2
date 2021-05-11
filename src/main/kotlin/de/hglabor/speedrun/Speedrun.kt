@@ -10,6 +10,7 @@ import de.hglabor.speedrun.listener.quitListener
 import de.hglabor.speedrun.location.LOBBY_SPAWN
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.clearInv
+import de.hglabor.speedrun.utils.survival
 import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.event.listen
@@ -42,6 +43,7 @@ class Speedrun : KSpigot() {
 
         listen<PlayerJoinEvent> {
             it.player.teleport(LOBBY_SPAWN)
+            it.player.survival()
             it.player.clearInv()
         }
 
