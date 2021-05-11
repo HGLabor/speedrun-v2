@@ -24,6 +24,7 @@ enum class Config(private val path: String, value: Any) {
             PLUGIN.config.options().copyDefaults(true)
             PLUGIN.saveConfig()
         }
+        fun reload() { PLUGIN.reloadConfig() }
     }
 
     fun set(value: Int) {
@@ -34,6 +35,4 @@ enum class Config(private val path: String, value: Any) {
 
     fun getInt(): Int = this.configValue as Int
     fun getBoolean(): Boolean = this.configValue as Boolean
-
-    fun reload() { PLUGIN.reloadConfig() }
 }

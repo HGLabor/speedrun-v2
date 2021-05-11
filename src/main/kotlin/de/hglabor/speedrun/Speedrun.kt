@@ -1,6 +1,7 @@
 package de.hglabor.speedrun
 
 import de.hglabor.speedrun.command.NextPhaseCommand
+import de.hglabor.speedrun.command.ReloadCommand
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.listener.joinListener
@@ -38,6 +39,7 @@ class Speedrun : KSpigot() {
         quitListener()
 
         getCommand("next")?.setExecutor(NextPhaseCommand())
+        getCommand("speedrun-reload")?.setExecutor(ReloadCommand())
 
         Worlds.createWorlds()
 
