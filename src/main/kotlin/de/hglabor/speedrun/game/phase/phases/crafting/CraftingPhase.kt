@@ -7,6 +7,7 @@ import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.addToInv
+import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.grayBroadcast
 import de.hglabor.speedrun.utils.stack
 import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
@@ -14,8 +15,11 @@ import de.hglabor.utils.noriskutils.SoundUtils
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
 
@@ -62,4 +66,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
             finish(event.whoClicked.uniqueId)
         }
     }
+
+    @EventHandler
+    fun onInteract(event: InventoryOpenEvent) { if (event.player.gameMode == GameMode.SPECTATOR || !isIngame()) event.cancel() }
 }

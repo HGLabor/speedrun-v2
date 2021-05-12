@@ -101,6 +101,7 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
                     startMillis = System.currentTimeMillis()
                 }
                 wholeDuration+1 -> {
+                    activePhase = Phase.PREPARATION
                     onStop()
                 }
             }
