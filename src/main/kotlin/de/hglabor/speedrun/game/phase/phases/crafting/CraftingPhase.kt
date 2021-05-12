@@ -51,8 +51,9 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
     }
 
     override fun teleportPlayers() {
+        val shuffled = CRAFTING_SPAWNS!!.shuffled()
         UserList.players.forEachIndexed { index, player ->
-            player.teleport(CRAFTING_SPAWNS!!.shuffled()[index])
+            player.teleport(shuffled[index])
             SoundUtils.playTeleportSound(player)
         }
     }

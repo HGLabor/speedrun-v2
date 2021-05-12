@@ -12,3 +12,7 @@ commands:
     description: Reloads the speedrun config
     usage: /speedrun-reload
     permission: group.admin
+  loadstructures:
+    description: Loads the speedrun structures
+    usage: /loadstructures
+    permission: group.admin

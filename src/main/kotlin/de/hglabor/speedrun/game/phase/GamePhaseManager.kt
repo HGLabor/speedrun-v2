@@ -3,6 +3,7 @@ package de.hglabor.speedrun.game.phase
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.phases.LobbyPhase
+import de.hglabor.speedrun.game.phase.phases.PortalPhase
 import de.hglabor.speedrun.game.phase.phases.WinPhase
 import de.hglabor.speedrun.game.phase.phases.crafting.CraftingPhase
 import de.hglabor.speedrun.player.UserList
@@ -19,9 +20,10 @@ object GamePhaseManager {
     }
 
     fun nextPhase() {
-        when(currentPhase.getGameState()) {
+        currentPhase = when(currentPhase.getGameState()) {
             GameState.Lobby -> setPhase(CraftingPhase::class)
-            GameState.Crafting -> setPhase(WinPhase::class)
+            GameState.Crafting -> setPhase(PortalPhase::class)
+            GameState.Portal -> setPhase(WinPhase::class)
             GameState.Win -> setPhase(LobbyPhase::class)
         }
     }

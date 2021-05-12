@@ -1,5 +1,6 @@
 package de.hglabor.speedrun
 
+import de.hglabor.speedrun.command.LoadStructuresCommand
 import de.hglabor.speedrun.command.NextPhaseCommand
 import de.hglabor.speedrun.command.ReloadCommand
 import de.hglabor.speedrun.config.Config
@@ -14,7 +15,7 @@ import de.hglabor.speedrun.utils.clearInv
 import de.hglabor.speedrun.utils.survival
 import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
-import de.hglabor.speedrun.worlds.createWorldStructures
+import de.hglabor.speedrun.worlds.structures
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.event.player.PlayerJoinEvent
@@ -41,9 +42,10 @@ class Speedrun : KSpigot() {
 
         getCommand("next")?.setExecutor(NextPhaseCommand())
         getCommand("speedrun-reload")?.setExecutor(ReloadCommand())
+        getCommand("loadstructures")?.setExecutor(LoadStructuresCommand())
 
         Worlds.createWorlds()
-        createWorldStructures()
+        structures()
 
         listen<PlayerJoinEvent> {
             it.player.teleport(LOBBY_SPAWN)
