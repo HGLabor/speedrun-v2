@@ -6,6 +6,7 @@ import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
 import org.bukkit.entity.Entity
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.inventory.ItemStack
@@ -52,8 +53,8 @@ fun Player.teleportToWorld(worldName: String) {
     this.teleport(Worlds[worldName]!!.spawnLocation)
 }
 
-fun Player.survival() { this.gameMode = GameMode.SURVIVAL }
-fun Player.spectator() { this.gameMode = GameMode.SPECTATOR }
+fun HumanEntity.survival() { this.gameMode = GameMode.SURVIVAL }
+fun HumanEntity.spectator() { this.gameMode = GameMode.SPECTATOR }
 
 fun Material.stack(): ItemStack = ItemStack(this)
 fun Material.stack(amount: Int): ItemStack = ItemStack(this, amount)

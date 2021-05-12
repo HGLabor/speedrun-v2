@@ -9,17 +9,16 @@ import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.addToInv
 import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.grayBroadcast
-import de.hglabor.speedrun.utils.stack
 import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
+import de.hglabor.utils.noriskutils.ItemBuilder
 import de.hglabor.utils.noriskutils.SoundUtils
-import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
 
@@ -27,7 +26,8 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
     private var itemToCraft: ItemStack? = null
 
     override fun startPreparationPhase() {
-        itemToCraft = CraftingUtils.randomItemToCraft.stack()
+        val material = CraftingUtils.randomItemToCraft
+        itemToCraft = ItemBuilder(material).setName(ChatColor.AQUA.toString() + material.name).build()
         UserList.players.forEach { player ->
             player.sendTitle("§6Round $roundNumber", "§cCraft (a) §b${itemToCraft?.type?.name}", 20, 45, 20)
             player.actionBar("Good Luck!")
@@ -68,5 +68,8 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
     }
 
     @EventHandler
-    fun onInteract(event: InventoryOpenEvent) { if (event.player.gameMode == GameMode.SPECTATOR || !isIngame()) event.cancel() }
+    fun onOpenInventory(event: InventoryOpenEvent) { if (event.player.gameMode == GameMode.SPECTATOR || !isIngame()) event.cancel() }
+
+    @EventHandler
+    fun onInventoryClick(event: InventoryClickEvent) { if (event.whoClicked.gameMode == GameMode.SPECTATOR || !isIngame()) event.cancel() }
 }
