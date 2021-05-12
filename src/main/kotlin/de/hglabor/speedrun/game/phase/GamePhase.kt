@@ -56,6 +56,8 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
 
     open fun teleportPlayers() = UserList.players.forEach { it.teleportToWorld(getGameState().name) }
 
+    open fun buildingAllowed() = false
+
     private fun isFinished() = rounds != -1 && roundNumber >= rounds
 
     private fun startRoundTask() {
