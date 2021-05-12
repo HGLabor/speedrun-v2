@@ -32,6 +32,8 @@ repositories {
     // Paper
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    // WorldEdit
+    maven("https://maven.enginehub.org/repo/")
 }
 
 dependencies {
@@ -44,6 +46,8 @@ dependencies {
     implementation("net.axay:kspigot:1.16.26")
     // HGLabor Utils
     implementation("de.hglabor:hglabor-utils:0.0.6")
+    // WorldEdit
+    implementation("com.sk89q.worldedit:worldedit-bukkit:7.2.0")
 }
 
 /*
