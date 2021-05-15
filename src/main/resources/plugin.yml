@@ -16,3 +16,6 @@ commands:
     description: Loads the speedrun structures
     usage: /loadstructures
     permission: group.admin
+  renew:
+    description: Renew
+    usage: /renew

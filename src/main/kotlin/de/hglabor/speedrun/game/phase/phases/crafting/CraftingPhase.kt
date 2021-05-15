@@ -6,19 +6,17 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.addToInv
-import de.hglabor.speedrun.utils.cancel
-import de.hglabor.speedrun.utils.grayBroadcast
+import de.hglabor.speedrun.utils.*
 import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
 import de.hglabor.utils.noriskutils.ItemBuilder
 import de.hglabor.utils.noriskutils.SoundUtils
 import net.axay.kspigot.extensions.bukkit.actionBar
+import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.CraftItemEvent
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.inventory.*
 import org.bukkit.inventory.ItemStack
 
 
@@ -37,23 +35,26 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
         }
     }
 
-    override fun startIngamePhase() {
-        UserList.players.forEach { CraftingUtils.getCraftingItems(itemToCraft!!.type).addToInv(it) }
+    override fun startIngamePhase() { UserList.players.forEach { items(it) } }
+
+    private fun items(player: Player) {
+        player.clearInv()
+        CraftingUtils.getCraftingItems(itemToCraft!!.type).addToInv(player)
     }
+
+    override fun onRenew(player: Player) { items(player) }
 
     override fun getGameState(): GameState = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
     override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "")
     override fun onNewStart() { itemToCraft = null }
 
-    override fun broadcastRoundInfo() {
-        grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}")
-    }
+    override fun broadcastRoundInfo() { grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}") }
 
     override fun teleportPlayers() {
         val shuffled = CRAFTING_SPAWNS!!.shuffled()
         UserList.players.forEachIndexed { index, player ->
-            player.teleport(shuffled[index])
+            player.teleport(shuffled[index].clone().add(0.5, 0, 0.5))
             SoundUtils.playTeleportSound(player)
         }
     }

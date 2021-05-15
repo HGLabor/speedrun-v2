@@ -5,10 +5,9 @@ import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
-import org.bukkit.entity.Entity
-import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.event.Cancellable
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -37,27 +36,23 @@ fun Player.updateScoreboard() {
     SpeedrunScoreboard.update(UserList[this.uniqueId]!!)
 }
 
-fun Player.createScoreboard() {
-    SpeedrunScoreboard.create(UserList[this.uniqueId]!!)
-}
+fun List<ItemStack>.addToInv(player: Player) { player.addToInv(this) }
 
-fun List<ItemStack>.addToInv(player: Player) {
-    player.addToInv(this)
-}
-
-fun Player.addToInv(items: List<ItemStack>) {
-    items.forEach { this.inventory.addItem(it) }
-}
-
-fun Player.teleportToWorld(worldName: String) {
-    this.teleport(Worlds[worldName]!!.spawnLocation)
-}
+fun Player.createScoreboard()                 { SpeedrunScoreboard.create(UserList[this.uniqueId]!!) }
+fun Player.addToInv(items: List<ItemStack>)   { items.forEach { this.inventory.addItem(it) } }
+fun Player.teleportToWorld(worldName: String) { this.teleport(Worlds[worldName]!!.spawnLocation) }
 
 fun HumanEntity.survival() { this.gameMode = GameMode.SURVIVAL }
 fun HumanEntity.spectator() { this.gameMode = GameMode.SPECTATOR }
 
 fun Material.stack(): ItemStack = ItemStack(this)
 fun Material.stack(amount: Int): ItemStack = ItemStack(this, amount)
+fun List<Material>.stack(): List<ItemStack> {
+    val itemStacks = ArrayList<ItemStack>()
+    forEach { itemStacks.add(it.stack()) }
+    return itemStacks
+}
+fun Inventory.addAll(items: List<ItemStack>) = items.forEach { this.addItem(it) }
 
 fun World.speedrunGameRules(): World {
     this.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)

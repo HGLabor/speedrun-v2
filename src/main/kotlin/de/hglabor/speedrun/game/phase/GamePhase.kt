@@ -10,16 +10,13 @@ import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
-import net.axay.kspigot.runnables.KSpigotRunnable
-import net.axay.kspigot.runnables.task
-import net.axay.kspigot.runnables.taskRunLater
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Sound
+import net.axay.kspigot.runnables.*
+import org.bukkit.*
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import java.util.*
 
-abstract class GamePhase(private var rounds: Int, private var preparationDuration: Int, private var roundDuration: Int) : Listener {
+abstract class GamePhase(private var rounds: Int = 1, private var preparationDuration: Int, private var roundDuration: Int) : Listener {
     private var activePhase = Phase.PREPARATION
     private var currentTask: KSpigotRunnable? = null
     private var finishedPlayers = ArrayList<UUID>()
@@ -57,6 +54,8 @@ abstract class GamePhase(private var rounds: Int, private var preparationDuratio
     open fun teleportPlayers() = UserList.players.forEach { it.teleportToWorld(getGameState().name) }
 
     open fun buildingAllowed() = false
+
+    open fun onRenew(player: Player) {}
 
     private fun isFinished() = rounds != -1 && roundNumber >= rounds
 

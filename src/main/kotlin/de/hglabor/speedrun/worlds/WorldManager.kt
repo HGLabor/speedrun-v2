@@ -11,10 +11,7 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.utils.addY
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.extensions.geometry.subtract
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.block.BlockFace
 import java.io.File
 import java.io.FileInputStream
@@ -22,7 +19,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 var CRAFTING_SPAWNS: MutableList<Location>? = null; private set
-var PORTAL_SPAWNS: MutableList<Location>? = null; private set
+var PORTAL_SPAWNS: MutableList<Location>? = null;
 val LAVA_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/lavaArena_02.schem")
 const val LAVA_ARENA_WIDTH = 10
 const val ARENA_COUNT = 20
@@ -73,11 +70,8 @@ fun cylinder(loc: Location, mat: Material?, r: Int) {
 fun portalStructures(portalWorld: World) {
     portalWorld.loadChunk(0, 0)
     val startLocation = Location(portalWorld, 0.0, 20.0, 0.0)
-    val format = ClipboardFormats.findByFile(LAVA_ARENA_FILE)
-    if (format != null) {
-        val clipboard = format.getReader(FileInputStream(LAVA_ARENA_FILE)).read()
-        pastePortals(startLocation, clipboard)
-    }
+    val clipboard = getPortalClipboard()
+    if (clipboard != null) pastePortals(startLocation, clipboard)
 }
 
 fun pastePortals(location: Location, clipboard: Clipboard) {
@@ -100,3 +94,13 @@ fun pastePortal(location: Location, clipboard: Clipboard) {
     Operations.complete(operation)
     editSession.close()
 }
+
+fun getPortalClipboard(): Clipboard? {
+    val format = ClipboardFormats.findByFile(LAVA_ARENA_FILE)
+    if (format != null) {
+        return format.getReader(FileInputStream(LAVA_ARENA_FILE)).read()
+    }
+    return null
+}
+
+fun requirePortalClipboard(): Clipboard = getPortalClipboard()!!
