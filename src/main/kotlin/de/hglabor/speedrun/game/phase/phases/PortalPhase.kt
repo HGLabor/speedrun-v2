@@ -31,15 +31,17 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
         player.inventory.addAll(items.stack() + ItemStack(Material.OAK_LEAVES, 64))
     }
 
-    override fun onRenew(player: Player) {
+    override fun onRenew(player: Player): Boolean {
         // When portal spawns are non-null, the clipboard is probably non-null too
-        if (PORTAL_SPAWNS != null) {
+        if (ingameNotFinished(player) && PORTAL_SPAWNS != null) {
             val loc = PORTAL_SPAWNS!![UserList.players.indexOf(player)]
             pastePortal(loc, requirePortalClipboard())
             player.teleport(loc)
             items(player)
             SoundUtils.playTeleportSound(player)
+            return true
         }
+        return false
     }
 
     override fun buildingAllowed(): Boolean = true

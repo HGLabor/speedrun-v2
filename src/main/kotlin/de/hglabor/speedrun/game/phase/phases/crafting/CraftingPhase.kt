@@ -13,7 +13,6 @@ import de.hglabor.utils.noriskutils.SoundUtils
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.ChatColor
-import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.*
@@ -42,7 +41,13 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
         CraftingUtils.getCraftingItems(itemToCraft!!.type).addToInv(player)
     }
 
-    override fun onRenew(player: Player) { items(player) }
+    override fun onRenew(player: Player): Boolean {
+        if (ingameNotFinished(player)) {
+            items(player)
+            return true
+        }
+        return false
+    }
 
     override fun getGameState(): GameState = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
@@ -70,8 +75,8 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
     }
 
     @EventHandler
-    fun onOpenInventory(event: InventoryOpenEvent) { if (event.player.gameMode == GameMode.SPECTATOR || !isIngame()) event.cancel() }
+    fun onOpenInventory(event: InventoryOpenEvent) { if (!ingameNotFinished(event.player)) event.cancel() }
 
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) { if (event.whoClicked.gameMode == GameMode.SPECTATOR || !isIngame()) event.cancel() }
+    fun onInventoryClick(event: InventoryClickEvent) { if (!ingameNotFinished(event.whoClicked)) event.cancel() }
 }

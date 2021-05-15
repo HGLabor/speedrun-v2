@@ -12,6 +12,7 @@ import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.runnables.*
 import org.bukkit.*
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import java.util.*
@@ -55,7 +56,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
 
     open fun buildingAllowed() = false
 
-    open fun onRenew(player: Player) {}
+    open fun onRenew(player: Player): Boolean = false
 
     private fun isFinished() = rounds != -1 && roundNumber >= rounds
 
@@ -224,4 +225,6 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
             }
         }
     }
+
+    fun ingameNotFinished(player: HumanEntity): Boolean = player.gameMode != GameMode.SPECTATOR && isIngame()
 }
