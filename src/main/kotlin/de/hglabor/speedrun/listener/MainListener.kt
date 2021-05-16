@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.listener
 
+import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.isCreative
@@ -24,5 +25,5 @@ fun mainListener() {
     listen<BlockBreakEvent> { if (!it.player.isCreative() && !GamePhaseManager.currentPhase.buildingAllowed()) it.cancel() }
     listen<BlockPlaceEvent> { if (!it.player.isCreative() && !GamePhaseManager.currentPhase.buildingAllowed()) it.cancel() }
     listen<PlayerDropItemEvent> { if (!it.player.isCreative()) it.cancel() }
-    listen<PlayerMoveEvent> { if (it.player.location.y <= 10) it.player.teleport(it.player.world.spawnLocation) }
+    listen<PlayerMoveEvent> { if (it.player.location.y <= 10 && GamePhaseManager.currentState != GameState.Stronghold) it.player.teleport(it.player.world.spawnLocation) }
 }
