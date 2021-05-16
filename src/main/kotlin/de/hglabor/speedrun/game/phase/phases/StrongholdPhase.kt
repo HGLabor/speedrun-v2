@@ -8,6 +8,7 @@ import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.closeAndClearInv
 import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
+import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -66,7 +67,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
         if (GamePhaseManager.currentState == GameState.Stronghold && ingameNotFinished(event.player)) {
             event.cancel()
             finish(event.player.uniqueId)
-            event.canCreatePortal = false
+            taskRunLater(5L) { event.player.teleport(event.from) } // Tp back because its broken
         }
     }
 
