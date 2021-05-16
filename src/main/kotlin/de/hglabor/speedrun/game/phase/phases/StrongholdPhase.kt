@@ -43,7 +43,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
         UserList.players.forEach { it.teleport(spawnLoc) }
     }
 
-    private fun getSpawnLoc(strLoc: Location, radius: Int = 250): Location {
+    private fun getSpawnLoc(strLoc: Location, radius: Int = 150): Location {
         var x = strLoc.x-radius
         while (x < strLoc.x+radius) {
             for (y in 25..49) {
@@ -65,6 +65,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     fun onPortal(event: PlayerPortalEvent) {
         if (GamePhaseManager.currentState == GameState.Stronghold && ingameNotFinished(event.player)) {
             event.cancel()
+            event.canCreatePortal = false
             finish(event.player.uniqueId)
         }
     }
