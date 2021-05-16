@@ -1,5 +1,5 @@
 package de.hglabor.speedrun.game
 
 enum class GameState {
-    Lobby, Crafting, Portal, Win
+    Lobby, Crafting, Portal, Stronghold, Win
 }

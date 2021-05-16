@@ -2,6 +2,7 @@ name: Speedrun
 version: 0.0.1
 main: de.hglabor.speedrun.Speedrun
 api-version: 1.16
+depend: [WorldGeneratorApi]
 
 commands:
   next:

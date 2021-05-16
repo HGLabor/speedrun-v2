@@ -2,9 +2,7 @@ package de.hglabor.speedrun.game.phase
 
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
-import de.hglabor.speedrun.game.phase.phases.LobbyPhase
-import de.hglabor.speedrun.game.phase.phases.PortalPhase
-import de.hglabor.speedrun.game.phase.phases.WinPhase
+import de.hglabor.speedrun.game.phase.phases.*
 import de.hglabor.speedrun.game.phase.phases.crafting.CraftingPhase
 import de.hglabor.speedrun.player.UserList
 import kotlin.reflect.KClass
@@ -23,7 +21,8 @@ object GamePhaseManager {
         currentPhase = when(currentPhase.getGameState()) {
             GameState.Lobby -> setPhase(CraftingPhase::class)
             GameState.Crafting -> setPhase(PortalPhase::class)
-            GameState.Portal -> setPhase(WinPhase::class)
+            GameState.Portal -> setPhase(StrongholdPhase::class)
+            GameState.Stronghold -> setPhase(WinPhase::class)
             GameState.Win -> setPhase(LobbyPhase::class)
         }
     }

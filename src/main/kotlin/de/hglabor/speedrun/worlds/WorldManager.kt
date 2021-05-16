@@ -27,7 +27,10 @@ const val ARENA_COUNT = 20
 fun structures() {
     craftingStructures(Worlds["crafting"]!!)
     portalStructures(Worlds["portal"]!!)
+    strongholdStructures(Worlds["stronghold"]!!)
 }
+
+// Crafting
 
 fun craftingStructures(craftingWorld: World) {
     val loc = craftingWorld.spawnLocation.clone().subtract(0, 1, 0)
@@ -67,6 +70,8 @@ fun cylinder(loc: Location, mat: Material?, r: Int) {
     }
 }
 
+// Portal
+
 fun portalStructures(portalWorld: World) {
     portalWorld.loadChunk(0, 0)
     val startLocation = Location(portalWorld, 0.0, 20.0, 0.0)
@@ -104,3 +109,10 @@ fun getPortalClipboard(): Clipboard? {
 }
 
 fun requirePortalClipboard(): Clipboard = getPortalClipboard()!!
+
+
+// Stronghold
+
+fun strongholdStructures(strongholdWorld: World) {
+
+}

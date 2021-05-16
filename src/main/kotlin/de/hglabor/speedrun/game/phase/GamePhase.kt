@@ -152,6 +152,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
 
     /** Get's called by subclass when a player has finished */
     fun finish(uuid: UUID) {
+        if (finishedPlayers.contains(uuid)) return
         finishedPlayers.add(uuid)
         val player = Bukkit.getPlayer(uuid)!!
         Bukkit.broadcastMessage("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${player.displayName}")

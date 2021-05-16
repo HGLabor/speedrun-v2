@@ -1,6 +1,5 @@
 package de.hglabor.speedrun.game.phase.phases
 
-import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
@@ -12,7 +11,6 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.inventory.ItemStack
 
@@ -21,8 +19,8 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     override fun startPreparationPhase() {}
     override fun startIngamePhase() { items() }
 
-    override fun getScoreboardHeading(): String = "Leave"
-    override fun getScoreboardContent(): String = "${ChatColor.RED}/hub"
+    override fun getScoreboardHeading(): String = "Reset"
+    override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
     override fun getGameState(): GameState = GameState.Portal
 
     private fun items() { UserList.players.forEach { items(it) } }
@@ -45,9 +43,6 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     }
 
     override fun buildingAllowed(): Boolean = true
-
-    @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) { PLUGIN.updateScoreboards() }
 
     @EventHandler
     fun onPortal(event: PortalCreateEvent) {

@@ -32,6 +32,7 @@ repositories {
     // Paper
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.codemc.io/repository/maven-public/")
     // FAWE
     maven("https://mvn.intellectualsites.com/content/repositories/releases/")
 }
@@ -48,6 +49,8 @@ dependencies {
     implementation("net.axay:kspigot:1.16.26")
     // HGLabor Utils
     implementation("de.hglabor:hglabor-utils:0.0.6")
+    // WorldGeneratorApi
+    compileOnly("nl.rutgerkok:worldgeneratorapi:1.1.4")
 }
 
 /*
