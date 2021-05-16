@@ -57,7 +57,7 @@ class Speedrun : KSpigot() {
             it.player.survival()
             it.player.clearInv()
         }
-
+        
         Worlds.createWorlds()
         structures()
 
