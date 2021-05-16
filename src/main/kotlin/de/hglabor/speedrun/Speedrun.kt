@@ -8,13 +8,14 @@ import de.hglabor.speedrun.location.LOBBY_SPAWN
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
 import de.hglabor.speedrun.worlds.Worlds
-import de.hglabor.speedrun.worlds.generator.StrongholdWorldGenerator
+import de.hglabor.speedrun.worlds.generator.FlatDiamondGenerator
 import de.hglabor.speedrun.worlds.structures
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.register
 import net.axay.kspigot.main.KSpigot
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi
 import nl.rutgerkok.worldgeneratorapi.WorldRef
+import nl.rutgerkok.worldgeneratorapi.decoration.DecorationType
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.generator.ChunkGenerator
 
@@ -59,7 +60,11 @@ class Speedrun : KSpigot() {
         return WorldGeneratorApi
             .getInstance(this, 0, 5)
             .createCustomGenerator(WorldRef.ofName("stronghold")) {
-                it.baseTerrainGenerator = StrongholdWorldGenerator()
+                it.baseTerrainGenerator = FlatDiamondGenerator()
+                // Disable all decorations
+                it.worldDecorator.withoutAllDefaultDecorations()
+                // Enable strongholds again afterwards so only strongholds are enabled
+                it.worldDecorator.setDefaultDecoratorsEnabled(DecorationType.STRONGHOLDS, true)
             }
     }
 
