@@ -65,8 +65,8 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     fun onPortal(event: PlayerPortalEvent) {
         if (GamePhaseManager.currentState == GameState.Stronghold && ingameNotFinished(event.player)) {
             event.cancel()
-            event.canCreatePortal = false
             finish(event.player.uniqueId)
+            event.canCreatePortal = false
         }
     }
 
