@@ -4,8 +4,12 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.*
-import de.hglabor.speedrun.worlds.*
+import de.hglabor.speedrun.utils.addAll
+import de.hglabor.speedrun.utils.closeAndClearInv
+import de.hglabor.speedrun.utils.stack
+import de.hglabor.speedrun.worlds.PORTAL_SPAWNS
+import de.hglabor.speedrun.worlds.pastePortal
+import de.hglabor.speedrun.worlds.requirePortalClipboard
 import de.hglabor.utils.noriskutils.SoundUtils
 import org.bukkit.ChatColor
 import org.bukkit.Material

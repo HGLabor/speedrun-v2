@@ -2,7 +2,9 @@ package de.hglabor.speedrun.worlds
 
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.utils.speedrunGameRules
-import org.bukkit.*
+import org.bukkit.Bukkit
+import org.bukkit.World
+import org.bukkit.WorldCreator
 
 object Worlds : HashMap<String, World>() {
     var created = false

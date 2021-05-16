@@ -6,8 +6,13 @@ import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.closeAndClearInv
+import de.hglabor.speedrun.worlds.Worlds
+import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.StructureType
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -15,6 +20,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.inventory.ItemStack
+
 
 class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     override fun startPreparationPhase() {}
@@ -28,6 +34,31 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     private fun items(player: Player) {
         player.closeAndClearInv()
         player.inventory.addItem(ItemStack(Material.ENDER_EYE, 64))
+    }
+
+    override fun teleportPlayers() {
+        val world = Worlds["stronghold"]!!
+        val strongholdLoc: Location = world.locateNearestStructure(world.spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
+        val spawnLoc = getSpawnLoc(strongholdLoc)
+        UserList.players.forEach { it.teleport(spawnLoc) }
+    }
+
+    private fun getSpawnLoc(strLoc: Location, radius: Int = 250): Location {
+        var x = strLoc.x-radius
+        while (x < strLoc.x+radius) {
+            for (y in 25..49) {
+                var z = strLoc.z-radius
+                while (z < strLoc.z+radius) {
+                    val block: Block = strLoc.world!!.getBlockAt(x.toInt(), y, z.toInt())
+                    if (block.type == Material.COBBLESTONE_STAIRS) {
+                        return block.location.clone().add(0, 1, 0)
+                    }
+                    z++
+                }
+            }
+            x++
+        }
+        return strLoc
     }
 
     @EventHandler

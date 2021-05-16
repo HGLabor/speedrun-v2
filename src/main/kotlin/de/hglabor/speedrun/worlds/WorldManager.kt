@@ -11,7 +11,9 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.utils.addY
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.extensions.geometry.subtract
-import org.bukkit.*
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.block.BlockFace
 import java.io.File
 import java.io.FileInputStream
@@ -19,7 +21,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 var CRAFTING_SPAWNS: MutableList<Location>? = null; private set
-var PORTAL_SPAWNS: MutableList<Location>? = null;
+var PORTAL_SPAWNS: MutableList<Location>? = null
 val LAVA_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/lavaArena_02.schem")
 const val LAVA_ARENA_WIDTH = 10
 const val ARENA_COUNT = 20
@@ -27,7 +29,6 @@ const val ARENA_COUNT = 20
 fun structures() {
     craftingStructures(Worlds["crafting"]!!)
     portalStructures(Worlds["portal"]!!)
-    strongholdStructures(Worlds["stronghold"]!!)
 }
 
 // Crafting
@@ -109,10 +110,3 @@ fun getPortalClipboard(): Clipboard? {
 }
 
 fun requirePortalClipboard(): Clipboard = getPortalClipboard()!!
-
-
-// Stronghold
-
-fun strongholdStructures(strongholdWorld: World) {
-
-}

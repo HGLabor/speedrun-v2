@@ -1,12 +1,20 @@
 package de.hglabor.speedrun
 
-import de.hglabor.speedrun.command.*
+import de.hglabor.speedrun.command.LoadStructuresCommand
+import de.hglabor.speedrun.command.NextPhaseCommand
+import de.hglabor.speedrun.command.ReloadCommand
+import de.hglabor.speedrun.command.RenewCommand
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.phase.GamePhaseManager
-import de.hglabor.speedrun.listener.*
+import de.hglabor.speedrun.listener.joinListener
+import de.hglabor.speedrun.listener.lobbyListener
+import de.hglabor.speedrun.listener.mainListener
+import de.hglabor.speedrun.listener.quitListener
 import de.hglabor.speedrun.location.LOBBY_SPAWN
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.*
+import de.hglabor.speedrun.utils.clearInv
+import de.hglabor.speedrun.utils.survival
+import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import de.hglabor.speedrun.worlds.generator.FlatDiamondGenerator
 import de.hglabor.speedrun.worlds.structures
