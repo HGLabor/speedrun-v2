@@ -11,9 +11,7 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.utils.addY
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.extensions.geometry.subtract
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.block.BlockFace
 import java.io.File
 import java.io.FileInputStream
@@ -35,7 +33,7 @@ fun structures() {
 
 fun craftingStructures(craftingWorld: World) {
     val loc = craftingWorld.spawnLocation.clone().subtract(0, 1, 0)
-    cylinder(loc, Material.STRIPPED_OAK_WOOD, 30)
+    //cylinder(loc, Material.STRIPPED_OAK_WOOD, 30)
     getCircle(loc.addY(1), 20.0, 20).forEach { it.block.type = Material.CRAFTING_TABLE }
     CRAFTING_SPAWNS = getCircle(loc.addY(1), 16.0, 20)
     CRAFTING_SPAWNS!!.forEach { it.block.getRelative(BlockFace.DOWN).type = Material.BEDROCK }
