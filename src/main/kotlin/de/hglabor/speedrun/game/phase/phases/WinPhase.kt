@@ -7,9 +7,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.broadcastLine
-import de.hglabor.speedrun.utils.col
-import de.hglabor.speedrun.utils.grayBroadcast
+import de.hglabor.speedrun.utils.*
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task

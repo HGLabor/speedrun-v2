@@ -4,9 +4,7 @@ import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
+import org.bukkit.command.*
 import org.bukkit.entity.Player
 
 class NextPhaseCommand : CommandExecutor {
