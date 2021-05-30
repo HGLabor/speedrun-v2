@@ -5,9 +5,8 @@ import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
-import org.bukkit.entity.Entity
-import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
+import org.bukkit.block.Block
+import org.bukkit.entity.*
 import org.bukkit.event.Cancellable
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -43,6 +42,7 @@ fun List<ItemStack>.addToInv(player: Player) { player.addToInv(this) }
 fun Player.createScoreboard()                 { SpeedrunScoreboard.create(UserList[this.uniqueId]!!) }
 fun Player.addToInv(items: List<ItemStack>)   { items.forEach { this.inventory.addItem(it) } }
 fun Player.teleportToWorld(worldName: String) { this.teleport(Worlds[worldName]!!.spawnLocation) }
+fun Player.playPlingSound(pitch: Float = 0F) = this.playSound(this.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, pitch);
 
 fun HumanEntity.survival() { this.gameMode = GameMode.SURVIVAL }
 fun HumanEntity.spectator() { this.gameMode = GameMode.SPECTATOR }
@@ -77,3 +77,26 @@ fun String.col(vararg colorNames: String): String {
 fun colorFromName(name: String): ChatColor = ChatColor.valueOf(name.toUpperCase())
 
 fun Location.addY(y: Number) = this.clone().add(0, y, 0)
+
+fun Set<Block>.scanFor(material: Material): Set<Block> {
+    val blocks = HashSet<Block>()
+    this.forEach {
+        if (it.type == material) blocks.add(it)
+    }
+    return blocks
+}
+
+@JvmName("blocksBetweenExtension")
+fun World.blocksBetween(x1: Int, x2: Int, z1: Int, z2: Int, y1: Int = 50, y2: Int = 150) = blocksBetween(this, x1, x2, z1, z2, y1, y2)
+
+fun blocksBetween(world: World, x1: Int, x2: Int, z1: Int, z2: Int, y1: Int = 50, y2: Int = 150): Set<Block> {
+    val blocks = java.util.HashSet<Block>()
+    for (x in x1..x2) {
+        for (y in y1..y2) {
+            for (z in z1..z2) {
+                blocks.add(world.getBlockAt(x, y, z))
+            }
+        }
+    }
+    return blocks
+}

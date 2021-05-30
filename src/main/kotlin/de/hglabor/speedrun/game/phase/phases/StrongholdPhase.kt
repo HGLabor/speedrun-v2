@@ -9,10 +9,7 @@ import de.hglabor.speedrun.utils.closeAndClearInv
 import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.runnables.taskRunLater
-import org.bukkit.ChatColor
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.StructureType
+import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -24,6 +21,8 @@ import org.bukkit.inventory.ItemStack
 
 
 class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
+    private lateinit var spawnLoc: Location
+
     override fun startPreparationPhase() {}
     override fun startIngamePhase() { items() }
 
@@ -40,8 +39,16 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
     override fun teleportPlayers() {
         val world = Worlds["stronghold"]!!
         val strongholdLoc: Location = world.locateNearestStructure(world.spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
-        val spawnLoc = getSpawnLoc(strongholdLoc)
+        spawnLoc = getSpawnLoc(strongholdLoc)
         UserList.players.forEach { it.teleport(spawnLoc) }
+    }
+
+    override fun onRenew(player: Player): Boolean {
+        if (this::spawnLoc.isInitialized) {
+            player.teleport(spawnLoc)
+            return true
+        }
+        return false
     }
 
     private fun getSpawnLoc(strLoc: Location, radius: Int = 150): Location {
