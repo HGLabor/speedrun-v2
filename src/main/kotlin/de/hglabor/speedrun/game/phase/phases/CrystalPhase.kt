@@ -22,7 +22,7 @@ import java.util.*
 
 class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = 90) {
     private val crystalBlocks = HashMap<UUID, Set<Block>>()
-    private val playerScores = HashMap<UUID, Int>()
+    private val playerScores = HashMap<UUID, ArrayList<UUID>>()
 
     private val bow = itemStack(Material.BOW) {
         addEnchantment(Enchantment.ARROW_INFINITE, 1)
@@ -36,11 +36,16 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = 90) {
 
     override fun onNewStart() {
         UserList.players.forEach {
-            playerScores[it.uniqueId] = 0
+            playerScores[it.uniqueId] = ArrayList()
         }
     }
 
-    fun Player.finished() = playerScores[uniqueId] == crystalBlocks.size
+    private fun Player.finished() = playerScores[uniqueId]?.size == crystalBlocks.size
+    private fun Player.addShotCrystal(uuid: UUID): Boolean {
+        if (playerScores[uniqueId]!!.contains(uuid)) return false
+        playerScores[uniqueId]!! += uuid
+        return true
+    }
 
     override fun startPreparationPhase() {
         scanCrystalBlocks()
@@ -75,7 +80,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = 90) {
         }
     }
 
-    private fun scanObsidianBlocks(start: Location, r: Int = 4): Set<Block> {
+    private fun scanObsidianBlocks(start: Location, r: Int = 5): Set<Block> {
         return start.world!!.blocksBetween(start.blockX-r, start.blockX+r, start.blockZ-r, start.blockZ+r, y2 = start.blockY).scanFor(Material.OBSIDIAN)
     }
 
@@ -84,14 +89,21 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = 90) {
         if (event.entity !is EnderCrystal) return
         if (event.damager !is Projectile) return
         if ((event.damager as Projectile).shooter !is Player) return
-        val player: Player = (event.damager as Projectile).shooter as Player
-        player.playPlingSound()
         event.cancel()
+
+        val player: Player = (event.damager as Projectile).shooter as Player
+        if (!player.addShotCrystal(event.entity.uniqueId)) {
+            // Player has shot a crystal twice
+            player.playPlingSound(0)
+            return
+        }
+
+        player.playPlingSound()
 
         crystalBlocks[event.entity.uniqueId]?.forEach {
             player.sendBlockChange(it.location, Material.EMERALD_BLOCK.createBlockData())
         }
-        
+
         if (player.finished()) finish(player.uniqueId)
     }
 
