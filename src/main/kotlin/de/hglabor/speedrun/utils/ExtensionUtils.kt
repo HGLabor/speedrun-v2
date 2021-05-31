@@ -5,6 +5,7 @@ import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
+import org.bukkit.block.Block
 import org.bukkit.entity.Entity
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
