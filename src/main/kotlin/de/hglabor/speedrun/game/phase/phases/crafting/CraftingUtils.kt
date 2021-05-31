@@ -3,9 +3,7 @@ package de.hglabor.speedrun.game.phase.phases.crafting
 import de.hglabor.speedrun.utils.stack
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.inventory.*
 import java.util.*
 import java.util.stream.Collectors
 

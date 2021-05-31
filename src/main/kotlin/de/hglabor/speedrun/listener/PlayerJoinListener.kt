@@ -4,9 +4,7 @@ import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.col
-import de.hglabor.speedrun.utils.createScoreboard
-import de.hglabor.speedrun.utils.updateScoreboard
+import de.hglabor.speedrun.utils.*
 import net.axay.kspigot.event.listen
 import org.bukkit.ChatColor
 import org.bukkit.event.player.PlayerJoinEvent
