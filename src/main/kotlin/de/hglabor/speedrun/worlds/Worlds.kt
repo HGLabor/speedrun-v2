@@ -21,6 +21,7 @@ object Worlds : HashMap<String, World>() {
     /** Delete worlds that have to be regenerated each time */
     private fun deleteWorlds() {
         deleteWorld("stronghold")
+        deleteWorld("crystal")
     }
 
     private fun deleteWorld(worldName: String) {
