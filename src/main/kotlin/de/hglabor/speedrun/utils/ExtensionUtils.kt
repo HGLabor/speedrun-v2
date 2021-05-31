@@ -42,7 +42,7 @@ fun List<ItemStack>.addToInv(player: Player) { player.addToInv(this) }
 
 fun Player.createScoreboard()                 { SpeedrunScoreboard.create(UserList[this.uniqueId]!!) }
 fun Player.addToInv(items: List<ItemStack>)   { items.forEach { this.inventory.addItem(it) } }
-fun Player.teleportToWorld(worldName: String) { this.teleport(Worlds[worldName]!!.spawnLocation) }
+fun Player.teleport(world: World) { this.teleport(world.spawnLocation) }
 
 fun HumanEntity.survival() { this.gameMode = GameMode.SURVIVAL }
 fun HumanEntity.spectator() { this.gameMode = GameMode.SPECTATOR }

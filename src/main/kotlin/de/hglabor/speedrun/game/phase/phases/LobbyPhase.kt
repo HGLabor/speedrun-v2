@@ -4,6 +4,7 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import org.bukkit.ChatColor
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 
@@ -17,4 +18,9 @@ class LobbyPhase : GamePhase(0, -1, -1) {
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) { PLUGIN.updateScoreboards() }
+
+    override fun onRenew(player: Player): Boolean {
+        player.tpSpawn()
+        return true
+    }
 }

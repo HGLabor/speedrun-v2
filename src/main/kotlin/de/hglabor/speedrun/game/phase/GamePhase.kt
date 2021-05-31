@@ -5,6 +5,7 @@ import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
+import de.hglabor.speedrun.worlds.Worlds
 import de.hglabor.utils.noriskutils.SoundUtils
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
@@ -13,10 +14,7 @@ import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
 import net.axay.kspigot.runnables.taskRunLater
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.GameMode
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
@@ -30,6 +28,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     var time: Long = 0L
     var roundNumber = 0
     var startMillis: Long? = null
+    private val world: World by lazy { Worlds[getGameState().name]!! }
 
     private val startDuration: Long = 3 // 3 seconds
 
@@ -57,7 +56,11 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         }
     }
 
-    open fun teleportPlayers() = UserList.players.forEach { it.teleportToWorld(getGameState().name) }
+    protected fun Player.tpSpawn() {
+        this.teleport(this@GamePhase.world)
+    }
+
+    open fun teleportPlayers() = UserList.players.forEach { it.tpSpawn() }
 
     open fun buildingAllowed() = false
 
