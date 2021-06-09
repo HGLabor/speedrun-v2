@@ -92,7 +92,9 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
                     taskRunLater(20L) {
                         data.isOpen = false
                         blockData = data
+                        player.apply { playSound(location, Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1F, 1F) }
                     }
+                    player.apply { playSound(location, Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1F, 1F) }
                 }
             }
     }
