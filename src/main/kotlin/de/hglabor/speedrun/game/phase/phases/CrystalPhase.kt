@@ -6,7 +6,6 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
-import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
@@ -16,7 +15,8 @@ import org.bukkit.block.Block
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.*
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.inventory.ItemFlag
 import java.util.*
 
@@ -24,7 +24,7 @@ import java.util.*
 class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.CRYSTAL_INGAME_TIME.getInt()) {
     private val crystalBlocks = HashMap<UUID, Set<Block>>()
     private val playerScores = HashMap<UUID, ArrayList<UUID>>()
-
+    override val state = GameState.Crystal
     private val bow = itemStack(Material.BOW) {
         addEnchantment(Enchantment.ARROW_INFINITE, 1)
         addEnchantment(Enchantment.ARROW_DAMAGE, 1)
@@ -57,12 +57,14 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
     }
 
     override fun startIngamePhase() {
+        // Remove the dragon
+        world.getEntitiesByClass(EnderDragon::class.java).forEach { it.remove() }
         items()
     }
 
     override fun getScoreboardHeading(): String = "Amount"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}${crystalBlocks.size}"
-    override fun getGameState(): GameState = GameState.Crystal
+
     override fun broadcastRoundInfo() {
         grayBroadcast("$PREFIX Destroy all ${crystalBlocks.size.toString().col("aqua")} Crystals")
     }
@@ -75,7 +77,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
 
 
     private fun scanCrystalBlocks() {
-        val crystals: Collection<Entity> = Worlds["crystal"]!!.getEntitiesByClasses(EnderCrystal::class.java)
+        val crystals: Collection<Entity> = world.getEntitiesByClasses(EnderCrystal::class.java)
         for (crystal in crystals) {
             crystalBlocks[crystal.uniqueId] = scanObsidianBlocks(crystal.location)
         }
@@ -86,14 +88,14 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
     }
 
     @EventHandler
-    fun crystalDamage(event: EntityDamageByEntityEvent) {
-        if (event.entity !is EnderCrystal) return
-        if (event.damager !is Projectile) return
-        if ((event.damager as Projectile).shooter !is Player) return
-        event.cancel()
+    fun crystalDamage(event: EntityDamageByEntityEvent) = with(event) {
+        if (entity !is EnderCrystal) return
+        if (damager !is Projectile) return
+        if ((damager as Projectile).shooter !is Player) return
+        cancel()
 
-        val player: Player = (event.damager as Projectile).shooter as Player
-        if (!player.addShotCrystal(event.entity.uniqueId)) {
+        val player: Player = (damager as Projectile).shooter as Player
+        if (!player.addShotCrystal(entity.uniqueId)) {
             // Player has shot a crystal twice
             player.playPlingSound(0)
             return
@@ -101,7 +103,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
 
         player.playPlingSound()
 
-        crystalBlocks[event.entity.uniqueId]?.forEach {
+        crystalBlocks[entity.uniqueId]?.forEach {
             player.sendBlockChange(it.location, Material.EMERALD_BLOCK.createBlockData())
         }
 
@@ -109,12 +111,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
     }
 
     @EventHandler
-    fun enderManTarget(event: EntityTargetEvent) {
-        if (event.entity is Enderman) event.cancel()
-    }
-
-    @EventHandler
-    fun entitySpawn(event: EntitySpawnEvent) {
-        if (event.entity is EnderDragon) event.cancel()
+    fun enderManTarget(event: EntityTargetEvent) = with(event) {
+        if (entity is Enderman) cancel()
     }
 }

@@ -22,7 +22,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
 
     override fun getScoreboardHeading(): String = "Reset"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
-    override fun getGameState(): GameState = GameState.Portal
+    override val state = GameState.Portal
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {
@@ -46,8 +46,8 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
     override fun buildingAllowed(): Boolean = true
 
     @EventHandler
-    fun onPortal(event: PortalCreateEvent) {
-        if (GamePhaseManager.currentState == GameState.Portal && event.entity != null) finish(event.entity!!.uniqueId)
+    fun onPortal(event: PortalCreateEvent) = with(event) {
+        if (GamePhaseManager.currentState == GameState.Portal && entity != null) finish(entity!!.uniqueId)
     }
 
     override fun teleportPlayers() {

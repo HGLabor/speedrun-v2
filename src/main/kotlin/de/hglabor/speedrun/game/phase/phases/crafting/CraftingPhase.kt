@@ -50,7 +50,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
         return false
     }
 
-    override fun getGameState(): GameState = GameState.Crafting
+    override val state = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
     override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "")
     override fun onNewStart() { itemToCraft = null }
@@ -66,18 +66,18 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
     }
 
     @EventHandler
-    fun onCrafting(event: CraftItemEvent) {
+    fun onCrafting(event: CraftItemEvent) = with(event) {
         if (GamePhaseManager.currentState != GameState.Crafting) {
             return
         }
-        if (event.recipe.result.isSimilar(ItemStack(itemToCraft!!.type))) {
-            finish(event.whoClicked.uniqueId)
+        if (recipe.result.isSimilar(ItemStack(itemToCraft!!.type))) {
+            finish(whoClicked.uniqueId)
         }
     }
 
     @EventHandler
-    fun onOpenInventory(event: InventoryOpenEvent) { if (!ingameNotFinished(event.player)) event.cancel() }
+    fun onOpenInventory(event: InventoryOpenEvent) = with(event) { if (!ingameNotFinished(player)) cancel() }
 
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) { if (!ingameNotFinished(event.whoClicked)) event.cancel() }
+    fun onInventoryClick(event: InventoryClickEvent) = with(event) { if (!ingameNotFinished(whoClicked)) cancel() }
 }

@@ -7,7 +7,6 @@ import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.closeAndClearInv
-import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.*
@@ -31,7 +30,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
 
     override fun getScoreboardHeading(): String = "Stuck?"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
-    override fun getGameState(): GameState = GameState.Stronghold
+    override val state = GameState.Stronghold
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {
@@ -39,9 +38,8 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
         player.inventory.addItem(ItemStack(Material.ENDER_EYE, 64))
     }
 
-    override fun teleportPlayers() {
-        val world = Worlds["stronghold"]!!
-        val strongholdLoc: Location = world.locateNearestStructure(world.spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
+    override fun teleportPlayers() = with(GameState.Stronghold.world) {
+        val strongholdLoc: Location = locateNearestStructure(spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
         spawnLoc = getSpawnLoc(strongholdLoc)
         UserList.players.forEach { it.teleport(spawnLoc) }
     }
@@ -54,20 +52,20 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
         return false
     }
 
-    private fun getSpawnLoc(strLoc: Location, radius: Int = 150): Location {
-        var x = strLoc.x-radius
-        while (x < strLoc.x+radius) {
-            for (y in 25..49) {
-                var z = strLoc.z-radius
-                while (z < strLoc.z+radius) {
-                    val block: Block = strLoc.world!!.getBlockAt(x.toInt(), y, z.toInt())
+    private fun getSpawnLoc(strLoc: Location, radius: Int = 150): Location = with(strLoc) {
+        var mX = x-radius
+        while (mX < x+radius) {
+            for (mY in 25..49) {
+                var mZ = z-radius
+                while (mZ < z+radius) {
+                    val block: Block = world!!.getBlockAt(mX.toInt(), mY, mZ.toInt())
                     if (block.type == Material.COBBLESTONE_STAIRS) {
                         return block.location.clone().add(0, 1, 0)
                     }
-                    z++
+                    mZ++
                 }
             }
-            x++
+            mX++
         }
         return strLoc
     }
@@ -82,7 +80,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    fun onInteract(event: PlayerInteractEvent) = with (event) {
+    fun onInteract(event: PlayerInteractEvent) = with(event) {
             if (item?.type == Material.ENDER_EYE && clickedBlock?.type != Material.END_PORTAL_FRAME) cancel()
             if (clickedBlock?.type == Material.IRON_DOOR && action == Action.RIGHT_CLICK_BLOCK) {
                 clickedBlock!!.apply {
@@ -92,9 +90,9 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
                     taskRunLater(20L) {
                         data.isOpen = false
                         blockData = data
-                        player.apply { playSound(location, Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1F, 1F) }
+                        player.playSound(location, Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1F, 1F)
                     }
-                    player.apply { playSound(location, Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1F, 1F) }
+                    player.playSound(location, Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1F, 1F)
                 }
             }
     }

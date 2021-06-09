@@ -2,13 +2,10 @@ package de.hglabor.speedrun.utils
 
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
-import de.hglabor.speedrun.worlds.Worlds
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
 import org.bukkit.block.Block
-import org.bukkit.entity.Entity
-import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.event.Cancellable
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -49,8 +46,7 @@ fun Player.playPlingSound(pitch: Number = 1) = this.playSound(this.location, Sou
 fun HumanEntity.survival() { this.gameMode = GameMode.SURVIVAL }
 fun HumanEntity.spectator() { this.gameMode = GameMode.SPECTATOR }
 
-fun Material.stack(): ItemStack = ItemStack(this)
-fun Material.stack(amount: Int): ItemStack = ItemStack(this, amount)
+fun Material.stack(amount: Int = 1): ItemStack = ItemStack(this, amount)
 fun List<Material>.stack(): List<ItemStack> {
     val itemStacks = ArrayList<ItemStack>()
     forEach { itemStacks.add(it.stack()) }
@@ -101,4 +97,12 @@ fun blocksBetween(world: World, x1: Int, x2: Int, z1: Int, z2: Int, y1: Int = 50
         }
     }
     return blocks
+}
+
+fun MutableList<ItemStack>.add(material: Material, amount: Int = 1) = add(ItemStack(material, amount))
+fun MutableList<ItemStack>.addAll(vararg items: Any) {
+    items.forEach {
+        if (it is Material) add(it)
+        else if (it is ItemStack) add(it)
+    }
 }

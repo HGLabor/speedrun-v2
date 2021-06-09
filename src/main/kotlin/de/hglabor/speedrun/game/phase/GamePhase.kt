@@ -11,9 +11,7 @@ import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
-import net.axay.kspigot.runnables.KSpigotRunnable
-import net.axay.kspigot.runnables.task
-import net.axay.kspigot.runnables.taskRunLater
+import net.axay.kspigot.runnables.*
 import org.bukkit.*
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -24,13 +22,14 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     private var activePhase = Phase.PREPARATION
     private var currentTask: KSpigotRunnable? = null
     private var finishedPlayers = ArrayList<UUID>()
-    var timeHeading: String = "Starting in:"
-    var time: Long = 0L
+    var timeHeading = "Starting in:"
+    var time = 0L
     var roundNumber = 0
     var startMillis: Long? = null
-    private val world: World by lazy { Worlds[getGameState().name]!! }
+    val world by lazy { Worlds[state.name]!! }
+    private val spawn by lazy { world.spawnLocation }
 
-    private val startDuration: Long = 3 // 3 seconds
+    private val startDuration = 3L // 3 seconds
 
     enum class Phase {
         PREPARATION, INGAME
@@ -41,7 +40,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
 
         // Display title
         UserList.players.forEach { player ->
-            player.sendTitle(getGameState().name.col("red"), "", 5, 10, 5)
+            player.sendTitle(state.name.col("red"), "", 5, 10, 5)
         }
         // Teleport players delayed and set gamemode to survival
         taskRunLater(20L) {
@@ -57,7 +56,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     }
 
     protected fun Player.tpSpawn() {
-        this.teleport(this@GamePhase.world)
+        this.teleport(this@GamePhase.spawn)
     }
 
     open fun teleportPlayers() = UserList.players.forEach { it.tpSpawn() }
@@ -78,7 +77,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         ) {
             val counterLong = it.counterUp!!.toLong()
             val ingameStart = startDuration+preparationDuration
-            when (counterLong) {
+            timeHeading = when(counterLong) {
                 1L -> {
                     UserList.clearAndCloseAllInvs()
                     onNewStart()
@@ -87,7 +86,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                         player.noMove(3)
                         player.survival()
                     }
-                    timeHeading = "Starting in:"
+                    "Starting in:"
                 }
                 startDuration -> {
                     broadcastLine()
@@ -98,32 +97,29 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                     startPreparationPhase()
                     broadcastRoundInfo()
                     broadcastLine()
-                    timeHeading = "Preparation Time:"
+                    "Preparation Time:"
                 }
                 ingameStart -> {
                     UserList.clearAndCloseAllInvs()
                     UserList.players.forEach { player -> player.playSound(player.location, Sound.BLOCK_BEEHIVE_ENTER, 1F, 0F) }
                     activePhase = Phase.INGAME
                     startIngamePhase()
-                    timeHeading = "Time:"
                     startMillis = System.currentTimeMillis()
+                    "Time:"
                 }
                 wholeDuration+1 -> {
                     activePhase = Phase.PREPARATION
                     onStop()
+                    ""
                 }
+                else -> ""
             }
-            when {
-                counterLong < startDuration -> {
-                    // In countdown (starting in ...)
-                    time = 3L-counterLong
-                }
-                counterLong < ingameStart -> {
-                    time = ingameStart-counterLong
-                }
-                counterLong <= wholeDuration -> {
-                    time = wholeDuration-counterLong
-                }
+            // schon schön ngl
+            time = when {
+                counterLong < startDuration -> 3L-counterLong
+                counterLong < ingameStart -> ingameStart-counterLong
+                counterLong <= wholeDuration -> wholeDuration-counterLong
+                else -> 0
             }
             PLUGIN.updateScoreboards()
         }
@@ -144,7 +140,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         }
     }
 
-    abstract fun getGameState(): GameState
+    abstract val state: GameState
 
     fun isIngame(): Boolean = activePhase == Phase.INGAME
 
@@ -159,18 +155,18 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     }
 
     /** Get's called by subclass when a player has finished */
-    fun finish(uuid: UUID) {
+    fun finish(uuid: UUID) = with(Bukkit.getPlayer(uuid)!!) {
+        // Do everything with the player context
         if (finishedPlayers.contains(uuid)) return
         finishedPlayers.add(uuid)
-        val player = Bukkit.getPlayer(uuid)!!
-        Bukkit.broadcastMessage("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${player.displayName}")
-        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
+        Bukkit.broadcastMessage("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${displayName}")
+        playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
         if (startMillis != null) {
             val elapsedTime = (System.currentTimeMillis() - startMillis!!) / 1000F
-            player.actionBar("§6Time needed: §e" + elapsedTime + "s")
-            UserList[player.uniqueId]!!.addTotalTime(elapsedTime)
+            actionBar("§6Time needed: §e" + elapsedTime + "s")
+            UserList[uniqueId]!!.addTotalTime(elapsedTime)
         }
-        player.spectator()
+        spectator()
         // If all players have finished
         if (finishedPlayers.size == UserList.size) {
             Bukkit.getLogger().info("Finishing because ${finishedPlayers.size} players have finished of a total of ${UserList.size} players.")
@@ -196,29 +192,27 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
      * @param delay the delay in seconds
      */
     private fun startRoundTaskDelayed(delay: Long = 3): KSpigotRunnable = task(howOften = delay+1, period = 20L) {
-            timeHeading = "Next Round:"
-            time = delay-it.counterUp!!+1
-            PLUGIN.updateScoreboards()
-            if (it.counterUp == delay+1) {
-                startRoundTask()
-            }
-        }!!
+        timeHeading = "Next Round:"
+        time = delay-it.counterUp!!+1
+        PLUGIN.updateScoreboards()
+        if (it.counterUp == delay+1) {
+            startRoundTask()
+        }
+    }!!
 
     /**
      * @param delay the delay in seconds
      */
     private fun finishPhaseDelayed(delay: Long = 5) = task(howOften = delay+1, period = 20L) {
-            timeHeading = "Next Discipline:"
-            time = delay-it.counterUp!!+1
-            PLUGIN.updateScoreboards()
-            if (it.counterUp == delay+1) {
-                finishPhase()
-            }
-        }!!
+        timeHeading = "Next Discipline:"
+        time = delay-it.counterUp!!+1
+        PLUGIN.updateScoreboards()
+        if (it.counterUp == delay+1) {
+            finishPhase()
+        }
+    }!!
 
-    private fun finishPhase() {
-        GamePhaseManager.nextPhase()
-    }
+    private fun finishPhase() { GamePhaseManager.nextPhase() }
 
     private fun finishRound() {
         timeHeading = ""

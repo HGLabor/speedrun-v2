@@ -1,11 +1,11 @@
 package de.hglabor.speedrun.game.phase.phases.crafting
 
+import de.hglabor.speedrun.utils.addAll
 import de.hglabor.speedrun.utils.stack
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.*
 import java.util.*
-import java.util.stream.Collectors
 
 object CraftingUtils {
     private val random = Random()
@@ -18,72 +18,42 @@ object CraftingUtils {
     )
     private val SPECIAL_ITEMS = arrayOf(Material.WARPED_FUNGUS_ON_A_STICK, Material.RED_BED)
     private val TO_CRAFT_MATERIALS = toCraftMaterials
-    private fun getRecipes(itemStack: ItemStack): List<Recipe> {
-        return Bukkit.getRecipesFor(itemStack)
-    }
+    private fun getRecipes(itemStack: ItemStack): List<Recipe> = Bukkit.getRecipesFor(itemStack)
+    private fun Material.recipes() = getRecipes(ItemStack(this))
 
     private fun isShapedRecipe(material: Material): Boolean {
         var isShapedRecipe = false
-        for (recipe in getRecipes(ItemStack(material))) {
+        for (recipe in material.recipes()) {
             isShapedRecipe = recipe is ShapedRecipe
         }
         return isShapedRecipe
     }
 
     private fun isExcludedMaterial(material: Material): Boolean {
-        return Arrays.stream(EXCLUDED_ITEMS).anyMatch { excludedItemName: String? ->
-            material.name.toLowerCase().contains(
-                excludedItemName!!
-            )
-        }
+        return EXCLUDED_ITEMS.any { material.name.toLowerCase().contains(it) }
     }
 
     private val toCraftMaterials: List<Material>
         get() {
-            val collect =
-                Arrays.stream(Material.values()).filter { material: Material -> !isExcludedMaterial(material) }
-                    .filter { material: Material? -> material?.let { isShapedRecipe(material) } ?: false }.collect(Collectors.toList())
-            collect.addAll(listOf(*SPECIAL_ITEMS))
-            return collect
+            val materials: MutableList<Material> = Material.values().filter { !isExcludedMaterial(it) }.filter { isShapedRecipe(it) }.toMutableList()
+            return materials.apply { addAll(SPECIAL_ITEMS)}
         }
 
     private fun getOriginMaterial(itemStack: ItemStack): List<ItemStack>? {
-        for (logItem in LOG_ITEMS) {
-            if (itemStack.type.name.toLowerCase().endsWith(logItem)) {
-                return listOf(Material.OAK_LOG.stack())
-            }
-        }
+        for (logItem in LOG_ITEMS) if (itemStack.type.name.toLowerCase().endsWith(logItem)) return listOf(Material.OAK_LOG.stack())
+
         val itemStacks: MutableList<ItemStack> = ArrayList()
-        when (itemStack.type) {
-            Material.FISHING_ROD -> {
-                itemStacks.add(Material.OAK_LOG.stack())
-                itemStacks.add(Material.STRING.stack(2))
-                return itemStacks
+        with(itemStacks) {
+            when (itemStack.type) {
+                Material.FISHING_ROD -> addAll(Material.OAK_LOG, Material.STRING.stack(2))
+                Material.RED_BED -> addAll(Material.OAK_LOG, Material.RED_WOOL.stack(3))
+                Material.ARMOR_STAND -> addAll(Material.OAK_LOG.stack(3), Material.SMOOTH_STONE_SLAB)
+                Material.CHEST_MINECART -> addAll(Material.OAK_LOG.stack(3), Material.IRON_BARS.stack(5))
+                Material.TNT_MINECART -> addAll(Material.SAND.stack(4), Material.GUNPOWDER.stack(5), Material.IRON_BARS.stack(5))
+                else -> {}
             }
-            Material.RED_BED -> {
-                itemStacks.add(Material.OAK_LOG.stack())
-                itemStacks.add(ItemStack(Material.RED_WOOL, 3))
-                return itemStacks
-            }
-            Material.ARMOR_STAND -> {
-                itemStacks.add(ItemStack(Material.OAK_LOG, 3))
-                itemStacks.add(Material.SMOOTH_STONE_SLAB.stack())
-                return itemStacks
-            }
-            Material.CHEST_MINECART -> {
-                itemStacks.add(ItemStack(Material.OAK_LOG, 3))
-                itemStacks.add(ItemStack(Material.IRON_BARS, 5))
-                return itemStacks
-            }
-            Material.TNT_MINECART -> {
-                itemStacks.add(ItemStack(Material.SAND, 4))
-                itemStacks.add(ItemStack(Material.GUNPOWDER, 5))
-                itemStacks.add(ItemStack(Material.IRON_BARS, 5))
-                return itemStacks
-            }
-            else -> {}
         }
-        return null
+        return itemStacks.ifEmpty { null }
     }
 
     val randomItemToCraft: Material

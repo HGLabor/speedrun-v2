@@ -25,7 +25,7 @@ class WinPhase : GamePhase(0, -1, -1) {
         broadcast("$PREFIX $magic ${ChatColor.GOLD}GAME ENDED $magic")
         broadcastLine()
         // Broadcast top 10 players
-        if (winners.size >= Config.BROADCAST_WINNERS_AMOUNT.getInt()) for (i in 0 until Config.BROADCAST_WINNERS_AMOUNT.getInt()) { broadcastWinner(i) }
+        if (winners.size >= Config.BROADCAST_WINNERS_AMOUNT.getInt()) for (i in 0 until Config.BROADCAST_WINNERS_AMOUNT.getInt()) broadcastWinner(i)
         else winners.indices.forEach { broadcastWinner(it) }
 
         if (Config.DO_RESTART.getBoolean()) {
@@ -34,16 +34,12 @@ class WinPhase : GamePhase(0, -1, -1) {
             winTask = task(howOften = seconds + 1, period = 20L) {
                 time = seconds - it.counterUp!!.toLong()
                 when (time) {
-                    in 1..5 -> {
-                        grayBroadcast("$PREFIX Server is restarting in ${time.toString().col("aqua")} seconds.")
-                    }
+                    in 1..5 -> grayBroadcast("$PREFIX Server is restarting in ${time.toString().col("aqua")} seconds.")
                     0L -> {
                         timeHeading = "Restarting..."
                         grayBroadcast("$PREFIX ${ChatColor.DARK_AQUA}Restarting...")
                     }
-                    -1L -> {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart")
-                    }
+                    -1L -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart")
                 }
                 PLUGIN.updateScoreboards()
             }
@@ -70,7 +66,7 @@ class WinPhase : GamePhase(0, -1, -1) {
     override fun getScoreboardHeading(): String = "Winner:"
     override fun getScoreboardContent(): String = ChatColor.AQUA.toString() + winners[0].player.displayName
 
-    override fun getGameState(): GameState = GameState.Win
+    override val state = GameState.Win
 
     private fun sortPlayersBestTime(): List<SpeedRunner> = UserList.values.sortedWith { s1, s2 -> (s1.timeNeededTotal - s2.timeNeededTotal).toInt() }
 }

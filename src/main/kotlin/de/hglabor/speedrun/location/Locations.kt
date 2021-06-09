@@ -1,5 +1,5 @@
 package de.hglabor.speedrun.location
 
-import de.hglabor.speedrun.worlds.Worlds
+import de.hglabor.speedrun.game.GameState
 
-val LOBBY_SPAWN = Worlds["lobby"]!!.spawnLocation
+val LOBBY_SPAWN = GameState.Lobby.world.spawnLocation
