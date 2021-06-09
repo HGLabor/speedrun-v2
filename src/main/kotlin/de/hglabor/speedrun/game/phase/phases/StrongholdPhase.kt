@@ -12,9 +12,11 @@ import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.*
 import org.bukkit.block.Block
+import org.bukkit.block.data.Openable
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
+import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPortalEvent
@@ -71,24 +73,35 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
     }
 
     @EventHandler
-    fun onPortal(event: PlayerPortalEvent) {
-        if (GamePhaseManager.currentState == GameState.Stronghold && ingameNotFinished(event.player)) {
-            event.cancel()
-            finish(event.player.uniqueId)
-            taskRunLater(5L) { event.player.teleport(event.from) } // Tp back because its broken
+    fun onPortal(event: PlayerPortalEvent) = with(event) {
+        if (GamePhaseManager.currentState == GameState.Stronghold && ingameNotFinished(player)) {
+            cancel()
+            finish(player.uniqueId)
+            taskRunLater(5L) { player.teleport(from) } // Tp back because its broken
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    fun onInteract(event: PlayerInteractEvent) {
-        if (event.item?.type == Material.ENDER_EYE && event.clickedBlock?.type != Material.END_PORTAL_FRAME) event.cancel()
+    fun onInteract(event: PlayerInteractEvent) = with (event) {
+            if (item?.type == Material.ENDER_EYE && clickedBlock?.type != Material.END_PORTAL_FRAME) cancel()
+            if (clickedBlock?.type == Material.IRON_DOOR && action == Action.RIGHT_CLICK_BLOCK) {
+                clickedBlock!!.apply {
+                    val data = (blockData as Openable)
+                    data.isOpen = true
+                    blockData = data
+                    taskRunLater(20L) {
+                        data.isOpen = false
+                        blockData = data
+                    }
+                }
+            }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    fun onBlockPlace(event: BlockPlaceEvent) {
-        if (event.blockAgainst.type == Material.END_PORTAL_FRAME) {
-            event.isCancelled = false
-            event.setBuild(true)
+    fun onBlockPlace(event: BlockPlaceEvent) = with(event) {
+        if (blockAgainst.type == Material.END_PORTAL_FRAME) {
+            isCancelled = false
+            setBuild(true)
         }
     }
 }
