@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.game.phase.phases
 
+import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
@@ -20,7 +21,7 @@ import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.inventory.ItemStack
 
 
-class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
+class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Config.STRONGHOLD_INGAME_TIME.getInt()) {
     private lateinit var spawnLoc: Location
 
     override fun startPreparationPhase() {}

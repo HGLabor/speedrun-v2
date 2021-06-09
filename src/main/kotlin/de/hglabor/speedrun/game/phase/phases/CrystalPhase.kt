@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.game.phase.phases
 
+import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
@@ -20,7 +21,7 @@ import org.bukkit.inventory.ItemFlag
 import java.util.*
 
 
-class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = 90) {
+class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.CRYSTAL_INGAME_TIME.getInt()) {
     private val crystalBlocks = HashMap<UUID, Set<Block>>()
     private val playerScores = HashMap<UUID, ArrayList<UUID>>()
 

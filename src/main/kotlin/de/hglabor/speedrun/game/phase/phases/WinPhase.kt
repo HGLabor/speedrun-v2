@@ -25,7 +25,7 @@ class WinPhase : GamePhase(0, -1, -1) {
         broadcast("$PREFIX $magic ${ChatColor.GOLD}GAME ENDED $magic")
         broadcastLine()
         // Broadcast top 10 players
-        if (winners.size >= 10) for (i in 0..9) { broadcastWinner(i) }
+        if (winners.size >= Config.BROADCAST_WINNERS_AMOUNT.getInt()) for (i in 0 until Config.BROADCAST_WINNERS_AMOUNT.getInt()) { broadcastWinner(i) }
         else winners.indices.forEach { broadcastWinner(it) }
 
         if (Config.DO_RESTART.getBoolean()) {

@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.game.phase.phases
 
+import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
@@ -14,7 +15,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.inventory.ItemStack
 
-class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = 60) {
+class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PORTAL_INGAME_TIME.getInt()) {
     private val items: List<Material> = listOf(Material.DIAMOND_PICKAXE, Material.WATER_BUCKET, Material.BUCKET, Material.FLINT_AND_STEEL)
     override fun startPreparationPhase() {}
     override fun startIngamePhase() { items() }
