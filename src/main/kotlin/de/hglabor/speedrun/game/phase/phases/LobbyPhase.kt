@@ -14,7 +14,7 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun getScoreboardHeading(): String = "Leave"
     override fun getScoreboardContent(): String = "${ChatColor.RED}/hub"
 
-    override val state = GameState.Lobby
+    override fun state() = GameState.Lobby
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) { PLUGIN.updateScoreboards() }

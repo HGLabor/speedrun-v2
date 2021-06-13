@@ -24,7 +24,7 @@ import java.util.*
 class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.CRYSTAL_INGAME_TIME.getInt()) {
     private val crystalBlocks = HashMap<UUID, Set<Block>>()
     private val playerScores = HashMap<UUID, ArrayList<UUID>>()
-    override val state = GameState.Crystal
+    override fun state() = GameState.Crystal
     private val bow = itemStack(Material.BOW) {
         addEnchantment(Enchantment.ARROW_INFINITE, 1)
         addEnchantment(Enchantment.ARROW_DAMAGE, 1)

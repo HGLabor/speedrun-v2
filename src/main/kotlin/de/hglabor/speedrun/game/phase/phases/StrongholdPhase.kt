@@ -30,7 +30,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
 
     override fun getScoreboardHeading(): String = "Stuck?"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
-    override val state = GameState.Stronghold
+    override fun state() = GameState.Stronghold
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {

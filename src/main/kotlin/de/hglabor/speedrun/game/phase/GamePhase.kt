@@ -26,7 +26,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     var time = 0L
     var roundNumber = 0
     var startMillis: Long? = null
-    val world by lazy { Worlds[state.name]!! }
+    val world by lazy { Worlds[state().name]!! }
     private val spawn by lazy { world.spawnLocation }
 
     private val startDuration = 3L // 3 seconds
@@ -40,7 +40,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
 
         // Display title
         UserList.players.forEach { player ->
-            player.sendTitle(state.name.col("red"), "", 5, 10, 5)
+            player.sendTitle(state().name.col("red"), "", 5, 10, 5)
         }
         // Teleport players delayed and set gamemode to survival
         taskRunLater(20L) {
@@ -140,7 +140,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         }
     }
 
-    abstract val state: GameState
+    abstract fun state(): GameState
 
     fun isIngame(): Boolean = activePhase == Phase.INGAME
 

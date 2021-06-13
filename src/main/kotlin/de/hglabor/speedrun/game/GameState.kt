@@ -6,5 +6,5 @@ enum class GameState {
     Lobby, Crafting, Portal, Stronghold, Crystal, Win
     ;
 
-    val world by lazy { Worlds[name]!! }
+    val world get() = Worlds[name]!!
 }

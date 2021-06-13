@@ -22,7 +22,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
 
     override fun getScoreboardHeading(): String = "Reset"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
-    override val state = GameState.Portal
+    override fun state() = GameState.Portal
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {

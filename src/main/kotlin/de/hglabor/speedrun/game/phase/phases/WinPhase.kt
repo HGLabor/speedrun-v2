@@ -66,7 +66,7 @@ class WinPhase : GamePhase(0, -1, -1) {
     override fun getScoreboardHeading(): String = "Winner:"
     override fun getScoreboardContent(): String = ChatColor.AQUA.toString() + winners[0].player.displayName
 
-    override val state = GameState.Win
+    override fun state() = GameState.Win
 
     private fun sortPlayersBestTime(): List<SpeedRunner> = UserList.values.sortedWith { s1, s2 -> (s1.timeNeededTotal - s2.timeNeededTotal).toInt() }
 }

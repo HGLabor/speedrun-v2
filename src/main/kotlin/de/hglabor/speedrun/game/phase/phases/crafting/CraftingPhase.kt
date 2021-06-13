@@ -50,7 +50,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
         return false
     }
 
-    override val state = GameState.Crafting
+    override fun state() = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
     override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "")
     override fun onNewStart() { itemToCraft = null }
