@@ -40,8 +40,8 @@ fun List<ItemStack>.addToInv(player: Player) { player.addToInv(this) }
 
 fun Player.createScoreboard()                 { SpeedrunScoreboard.create(UserList[this.uniqueId]!!) }
 fun Player.addToInv(items: List<ItemStack>)   { items.forEach { this.inventory.addItem(it) } }
-fun Player.teleport(world: World) { this.teleport(world.spawnLocation) }
 fun Player.playPlingSound(pitch: Number = 1) = this.playSound(this.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, pitch.toFloat());
+fun Player.playSound(sound: Sound, pitch: Number = 1, volume: Number = 1) = playSound(location, sound, volume.toFloat(), pitch.toFloat())
 
 fun HumanEntity.survival() { this.gameMode = GameMode.SURVIVAL }
 fun HumanEntity.spectator() { this.gameMode = GameMode.SPECTATOR }
