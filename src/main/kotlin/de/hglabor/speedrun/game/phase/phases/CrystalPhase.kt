@@ -102,6 +102,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
         }
 
         player.playPlingSound()
+        player.playSound(Sound.ENTITY_GENERIC_EXPLODE, location = entity.location)
 
         crystalBlocks[entity.uniqueId]?.forEach {
             player.sendBlockChange(it.location, Material.EMERALD_BLOCK.createBlockData())
