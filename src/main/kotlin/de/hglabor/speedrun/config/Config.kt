@@ -18,6 +18,7 @@ enum class Config(private val path: String, value: Any) {
 
     // Portal
     PORTAL_INGAME_TIME("portalIngame", 60),
+    PORTAL_SCHEMATIC("portalSchem", "lavaArena_03"),
 
     // Stronghold
     STRONGHOLD_INGAME_TIME("strongholdIngame", 60),
@@ -52,4 +53,5 @@ enum class Config(private val path: String, value: Any) {
 
     fun getInt(): Int = this.configValue as Int
     fun getBoolean(): Boolean = this.configValue as Boolean
+    fun getString(): String = this.configValue as String
 }

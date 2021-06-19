@@ -8,6 +8,7 @@ import com.sk89q.worldedit.function.operation.Operations
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.session.ClipboardHolder
 import de.hglabor.speedrun.PLUGIN
+import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.utils.addY
 import net.axay.kspigot.extensions.geometry.add
@@ -22,8 +23,8 @@ import kotlin.math.sin
 
 var CRAFTING_SPAWNS: MutableList<Location>? = null; private set
 var PORTAL_SPAWNS: MutableList<Location>? = null
-val LAVA_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/lavaArena_02.schem")
-const val LAVA_ARENA_WIDTH = 10
+val LAVA_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/${Config.PORTAL_SCHEMATIC.getString()}.schem")
+const val LAVA_ARENA_WIDTH = 20
 const val ARENA_COUNT = 20
 
 fun structures() {
