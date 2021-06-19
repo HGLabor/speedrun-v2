@@ -67,9 +67,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     @EventHandler
     fun onCrafting(event: CraftItemEvent) = with(event) {
-        if (GamePhaseManager.currentState != GameState.Crafting) {
-            return
-        }
+        if (GamePhaseManager.currentState != GameState.Crafting) return
         if (recipe.result.isSimilar(ItemStack(itemToCraft!!.type))) {
             finish(whoClicked.uniqueId)
         }

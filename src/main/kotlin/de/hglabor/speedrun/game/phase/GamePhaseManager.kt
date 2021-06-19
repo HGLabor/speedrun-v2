@@ -10,7 +10,7 @@ import kotlin.reflect.full.createInstance
 
 object GamePhaseManager {
     lateinit var currentPhase: GamePhase
-    val currentState by lazy { currentPhase.state() }
+    val currentState get() = currentPhase.state()
 
     fun start() {
         currentPhase = LobbyPhase()
