@@ -62,7 +62,7 @@ fun portalStructures() = with(GameState.Portal.world) {
     loadChunk(0, 0)
     val startLocation = Location(this, 0.0, 20.0, 0.0)
     val clipboard = getPortalClipboard()
-    if (clipboard != null) pastePortals(startLocation, clipboard)
+    pastePortals(startLocation, clipboard ?: return)
 }
 
 fun pastePortals(location: Location, clipboard: Clipboard) {
@@ -88,10 +88,7 @@ fun pastePortal(location: Location, clipboard: Clipboard) {
 
 fun getPortalClipboard(): Clipboard? {
     val format = ClipboardFormats.findByFile(LAVA_ARENA_FILE)
-    if (format != null) {
-        return format.getReader(FileInputStream(LAVA_ARENA_FILE)).read()
-    }
-    return null
+    return format?.getReader(FileInputStream(LAVA_ARENA_FILE))?.read()
 }
 
 fun requirePortalClipboard(): Clipboard = getPortalClipboard()!!

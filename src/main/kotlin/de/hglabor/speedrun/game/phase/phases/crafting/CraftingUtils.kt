@@ -68,10 +68,8 @@ object CraftingUtils {
         val itemStacksForCrafting: MutableList<ItemStack> = ArrayList()
         if (recipes[0] is ShapedRecipe) {
             for (value in (recipes[0] as ShapedRecipe).ingredientMap.values) {
-                if (value != null) {
-                    val originItems = getOriginMaterial(value)
-                    itemStacksForCrafting.addAll(originItems ?: setOf(value))
-                }
+                value ?: return itemStacksForCrafting
+                itemStacksForCrafting.addAll(getOriginMaterial(value) ?: setOf(value))
             }
         }
         return itemStacksForCrafting
