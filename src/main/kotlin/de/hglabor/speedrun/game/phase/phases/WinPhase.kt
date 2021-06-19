@@ -19,6 +19,8 @@ class WinPhase : GamePhase(0, -1, -1) {
     private var winTask: KSpigotRunnable? = null
 
     init {
+        tpPlayers()
+
         broadcastLine()
         val magic = ("|".repeat(11)).col("gray", "magic")
         broadcast("$PREFIX $magic ${ChatColor.GOLD}GAME ENDED $magic")
@@ -59,8 +61,6 @@ class WinPhase : GamePhase(0, -1, -1) {
         broadcast("$PREFIX ${ChatColor.GOLD}${i+1}. ${ChatColor.AQUA}${speedRunner.name} " +
                 "${ChatColor.GRAY}| ${ChatColor.RED}Total Time: ${ChatColor.YELLOW}${String.format("%.3f", speedRunner.timeNeededTotal)}s")
     }
-
-    override fun onNewStart() { tpPlayers() }
 
     override fun startPreparationPhase() {}
     override fun startIngamePhase() {}
