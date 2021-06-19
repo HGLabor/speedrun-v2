@@ -11,7 +11,6 @@ import de.hglabor.speedrun.utils.*
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 
 
@@ -39,7 +38,7 @@ class WinPhase : GamePhase(0, -1, -1) {
                         timeHeading = "Restarting..."
                         grayBroadcast("$PREFIX ${ChatColor.DARK_AQUA}Restarting...")
                     }
-                    -1L -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart")
+                    -1L -> command("restart")
                 }
                 PLUGIN.updateScoreboards()
             }

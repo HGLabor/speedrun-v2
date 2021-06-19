@@ -25,7 +25,9 @@ enum class Config(private val path: String, value: Any) {
     // Crystal
     CRYSTAL_INGAME_TIME("crystalIngame", 90),
 
-    RESTART_TIME("restartAfter", 30),
+    RESTART_TIME("restartAfter", 15),
+    CANCEL_RESTART_TIME("cancelRestartAfter", 2),
+
     DO_RESTART("doRestart", true),
 
     ;
