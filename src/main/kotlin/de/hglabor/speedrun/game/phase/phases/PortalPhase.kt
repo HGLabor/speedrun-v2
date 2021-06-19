@@ -50,7 +50,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
         if (GamePhaseManager.currentState == GameState.Portal && entity != null) finish(entity!!.uniqueId)
     }
 
-    override fun startRoundTP() {
+    override fun tpPlayers() {
         PORTAL_SPAWNS = PORTAL_SPAWNS!!.shuffled().toMutableList()
         UserList.players.forEachIndexed { index, player ->
             val loc = PORTAL_SPAWNS!![index]

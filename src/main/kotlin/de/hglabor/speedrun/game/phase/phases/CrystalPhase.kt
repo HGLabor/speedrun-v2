@@ -62,7 +62,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
         items()
     }
 
-    override fun startRoundTP() {}
+    override fun tpPlayers() {}
 
     override fun getScoreboardHeading(): String = "Amount"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}${crystalBlocks.size}"

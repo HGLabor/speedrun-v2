@@ -57,7 +57,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     override fun broadcastRoundInfo() { grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}") }
 
-    override fun startRoundTP() {
+    override fun tpPlayers() {
         val shuffled = CRAFTING_SPAWNS!!.shuffled()
         UserList.players.forEachIndexed { index, player ->
             player.teleport(shuffled[index].clone().add(0.5, 0, 0.5))
