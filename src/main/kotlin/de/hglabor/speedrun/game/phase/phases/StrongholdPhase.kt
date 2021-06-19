@@ -38,7 +38,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
         player.inventory.addItem(ItemStack(Material.ENDER_EYE, 64))
     }
 
-    override fun teleportPlayers() = with(GameState.Stronghold.world) {
+    override fun startRoundTP() = with(GameState.Stronghold.world) {
         val strongholdLoc: Location = locateNearestStructure(spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
         spawnLoc = getSpawnLoc(strongholdLoc)
         UserList.players.forEach { it.teleport(spawnLoc) }

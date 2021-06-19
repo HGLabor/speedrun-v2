@@ -48,10 +48,10 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                 SoundUtils.playTeleportSound(player)
                 player.survival()
             }
-            teleportPlayers()
-        }
-        if (roundDuration != -1) {
-            startRoundTask()
+            startPhaseTP()
+            if (roundDuration != -1) {
+                startRoundTask()
+            }
         }
     }
 
@@ -59,7 +59,8 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         this.teleport(this@GamePhase.spawn)
     }
 
-    open fun teleportPlayers() = UserList.players.forEach { it.tpSpawn() }
+    open fun startRoundTP() = UserList.players.forEach { it.tpSpawn() }
+    open fun startPhaseTP() = UserList.players.forEach { it.tpSpawn() }
 
     open fun buildingAllowed() = false
 
@@ -84,7 +85,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                     finishedPlayers.clear()
 
                     onNewStart()
-                    teleportPlayers()
+                    startRoundTP()
                     UserList.players.forEach { player ->
                         player.noMove(3)
                         player.survival()
