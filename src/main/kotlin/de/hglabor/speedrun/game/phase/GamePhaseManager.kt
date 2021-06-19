@@ -28,14 +28,14 @@ object GamePhaseManager {
         }
     }
 
-    fun setPhase(cl: KClass<out GamePhase>): GamePhase {
+    private fun setPhase(cl: KClass<out GamePhase>): GamePhase {
         // Clear/Close inventories
         UserList.clearAndCloseAllInvs()
 
         // Stop current phase
         currentPhase.stop()
 
-        // Start/Return next phase
+        // Start next phase
         currentPhase = cl.createInstance()
 
         PLUGIN.updateScoreboards()

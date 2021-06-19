@@ -80,6 +80,9 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
             timeHeading = when(counterLong) {
                 1L -> {
                     UserList.clearAndCloseAllInvs()
+                    // Clear finished players
+                    finishedPlayers.clear()
+
                     onNewStart()
                     teleportPlayers()
                     UserList.players.forEach { player ->
