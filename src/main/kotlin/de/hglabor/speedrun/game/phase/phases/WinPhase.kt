@@ -60,6 +60,8 @@ class WinPhase : GamePhase(0, -1, -1) {
                 "${ChatColor.GRAY}| ${ChatColor.RED}Total Time: ${ChatColor.YELLOW}${String.format("%.3f", speedRunner.timeNeededTotal)}s")
     }
 
+    override fun onNewStart() { tpPlayers() }
+
     override fun startPreparationPhase() {}
     override fun startIngamePhase() {}
     override fun getScoreboardHeading(): String = "Winner:"

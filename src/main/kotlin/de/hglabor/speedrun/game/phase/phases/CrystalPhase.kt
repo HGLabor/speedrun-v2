@@ -24,7 +24,9 @@ import java.util.*
 class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.CRYSTAL_INGAME_TIME.getInt()) {
     private val crystalBlocks = HashMap<UUID, Set<Block>>()
     private val playerScores = HashMap<UUID, ArrayList<UUID>>()
+
     override fun state() = GameState.Crystal
+
     private val bow = itemStack(Material.BOW) {
         addEnchantment(Enchantment.ARROW_INFINITE, 1)
         addEnchantment(Enchantment.ARROW_DAMAGE, 1)
@@ -61,8 +63,6 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
         world.getEntitiesByClass(EnderDragon::class.java).forEach { it.remove() }
         items()
     }
-
-    override fun tpPlayers() {}
 
     override fun getScoreboardHeading(): String = "Amount"
     override fun getScoreboardContent(): String = "${ChatColor.GOLD}${crystalBlocks.size}"

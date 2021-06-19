@@ -39,9 +39,12 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
     }
 
     override fun tpPlayers() = with(GameState.Stronghold.world) {
-        val strongholdLoc: Location = locateNearestStructure(spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
-        spawnLoc = getSpawnLoc(strongholdLoc)
-        UserList.players.forEach { it.teleport(spawnLoc) }
+        UserList.players.forEach { it.teleport(this.spawnLocation) }
+        taskRunLater(10L) {
+            val strongholdLoc: Location = locateNearestStructure(spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
+            spawnLoc = getSpawnLoc(strongholdLoc)
+            UserList.players.forEach { it.teleport(spawnLoc) }
+        }
     }
 
     override fun onRenew(player: Player): Boolean {
