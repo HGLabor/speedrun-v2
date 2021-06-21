@@ -38,7 +38,7 @@ fun craftingStructures() = with(GameState.Crafting.world) {
     val loc = spawnLocation.clone().subtract(0, 1, 0)
     getCircle(loc.addY(1), 20.0, 20).forEach { it.block.type = Material.CRAFTING_TABLE }
     CRAFTING_SPAWNS = getCircle(loc.addY(1), 16.0, 20)
-    CRAFTING_SPAWNS!!.forEach { it.block.getRelative(BlockFace.DOWN).type = Material.BEDROCK }
+    CRAFTING_SPAWNS!!.forEach { it.block.getRelative(BlockFace.DOWN).type = Material.PRISMARINE }
 }
 
 // Definitely not stolen
