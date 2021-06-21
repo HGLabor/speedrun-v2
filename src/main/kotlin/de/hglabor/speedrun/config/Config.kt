@@ -9,6 +9,10 @@ val MAX_PLAYERS: Int = Bukkit.getServer().maxPlayers
 
 enum class Config(private val path: String, value: Any) {
     MIN_PLAYERS("minPlayers", 4),
+
+    START_TIME_MIN_PLAYERS("startTimeMinPlayers", 120),
+    START_TIME_DOUBLE_MIN_PLAYERS("startTimeDoubleMinPlayers", 20),
+
     BROADCAST_WINNERS_AMOUNT("winnersToBroadcast", 10),
 
     // Crafting

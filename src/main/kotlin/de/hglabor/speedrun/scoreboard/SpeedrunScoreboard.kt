@@ -10,7 +10,6 @@ import de.hglabor.speedrun.utils.col
 import de.hglabor.utils.noriskutils.scoreboard.ScoreboardFactory
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import java.util.concurrent.TimeUnit
 
 object SpeedrunScoreboard {
     private const val disciplineHeadingName = "d_heading"
@@ -64,8 +63,6 @@ object SpeedrunScoreboard {
         ScoreboardFactory.updateEntry(player, phaseHeadingName, GamePhaseManager.currentPhase.getScoreboardHeading())
         ScoreboardFactory.updateEntry(player, phaseName, GamePhaseManager.currentPhase.getScoreboardContent())
         ScoreboardFactory.updateEntry(player, timeHeadingName, GamePhaseManager.currentPhase.timeHeading)
-        ScoreboardFactory.updateEntry(player, timeName, "${ChatColor.YELLOW}${formatTime(GamePhaseManager.currentPhase.time)}")
+        ScoreboardFactory.updateEntry(player, timeName, "${ChatColor.YELLOW}${GamePhaseManager.currentPhase.formattedTime}")
     }
-
-    private fun formatTime(seconds: Long) = String.format("%02d:%02d", TimeUnit.SECONDS.toMinutes(seconds), TimeUnit.SECONDS.toSeconds(seconds))
 }

@@ -24,6 +24,11 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     private var finishedPlayers = ArrayList<UUID>()
     var timeHeading = "Starting in:"
     var time = 0L
+    set(value) {
+        field = value
+        formattedTime = time.asTime()
+    }
+    var formattedTime: String = ""
     var roundNumber = 0
     var startMillis: Long? = null
     val world by lazy { Worlds[state().name]!! }
