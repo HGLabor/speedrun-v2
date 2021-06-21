@@ -39,10 +39,11 @@ class Speedrun : KSpigot() {
         joinListener()
         quitListener()
 
-        NextPhaseCommand().register("next")
-        ReloadCommand().register("speedrun-reload")
-        LoadStructuresCommand().register("loadstructures")
-        RenewCommand().register("renew")
+        StartCommand.register("start")
+        NextPhaseCommand.register("next")
+        ReloadCommand.register("speedrun-reload")
+        LoadStructuresCommand.register("loadstructures")
+        RenewCommand.register("renew")
 
         listen<PlayerJoinEvent> {
             it.player.teleport(LOBBY_SPAWN)

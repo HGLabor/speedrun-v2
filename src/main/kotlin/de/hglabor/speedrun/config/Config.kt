@@ -12,6 +12,7 @@ enum class Config(private val path: String, value: Any) {
 
     START_TIME_MIN_PLAYERS("startTimeMinPlayers", 120),
     START_TIME_DOUBLE_MIN_PLAYERS("startTimeDoubleMinPlayers", 20),
+    START_TIME_START_COMMAND("startTimeStartCommand", 10),
 
     BROADCAST_WINNERS_AMOUNT("winnersToBroadcast", 10),
 

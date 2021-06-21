@@ -9,14 +9,18 @@ commands:
     description: Skips the phase
     usage: /next
     permission: group.coder
+  start:
+    description: Starts the game
+    usage: /start
+    permission: group.contentcreator
   speedrun-reload:
     description: Reloads the speedrun config
     usage: /speedrun-reload
-    permission: group.admin
+    permission: group.coder
   loadstructures:
     description: Loads the speedrun structures
     usage: /loadstructures
-    permission: group.admin
+    permission: group.coder
   renew:
     description: Renew
     usage: /renew

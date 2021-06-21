@@ -68,6 +68,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     open fun buildingAllowed() = false
 
     open fun onRenew(player: Player): Boolean = false
+    open fun onStart(player: Player): Boolean = false
 
     private fun isFinished() = rounds != -1 && roundNumber >= rounds
 

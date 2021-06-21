@@ -48,6 +48,19 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun state() = GameState.Lobby
     override fun stop() { super.stop(); task?.cancel() }
 
+    override fun onStart(player: Player): Boolean {
+        val time = Config.START_TIME_START_COMMAND.getInt()
+        return if (startingIn <= time) false
+        else {
+            startingIn = time
+            if (!hasStarted) {
+                player.sendMessage("${KColors.RED}Not enough players.")
+                return false
+            }
+            true
+        }
+    }
+
     private fun task() {
         task?.cancel()
         task = task(period = 20L) {
