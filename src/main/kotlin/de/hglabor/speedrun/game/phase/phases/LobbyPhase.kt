@@ -40,7 +40,7 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     }
     private val hasStarted get() = startingIn != -1
 
-    private fun announceTime() = grayBroadcast("$PREFIX ${KColors.GREENYELLOW}Starting in ${KColors.GREENYELLOW}$startingIn ${KColors.GREEN} seconds.")
+    private fun announceTime() = grayBroadcast("$PREFIX ${KColors.GREENYELLOW}Starting in ${KColors.GREEN}$startingIn ${KColors.GREENYELLOW} seconds.")
 
     override fun state() = GameState.Lobby
     override fun stop() { super.stop(); task?.cancel() }
