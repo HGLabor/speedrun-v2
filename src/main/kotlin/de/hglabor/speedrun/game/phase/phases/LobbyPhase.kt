@@ -64,7 +64,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
             task()
         }
         else if (UserList.size >= Config.MIN_PLAYERS.getInt()*2) {
-            startingIn = Config.START_TIME_DOUBLE_MIN_PLAYERS.getInt()
+            val doubleTime = Config.START_TIME_DOUBLE_MIN_PLAYERS.getInt()
+            if (startingIn > doubleTime) {
+                startingIn = doubleTime
+            }
         }
         PLUGIN.updateScoreboards()
     }
