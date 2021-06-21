@@ -7,7 +7,7 @@ import org.bukkit.Material
 
 class FlatDiamondGenerator : BaseTerrainGenerator {
     override fun getHeight(x: Int, z: Int, type: BaseTerrainGenerator.HeightType): Int {
-        return 63
+        return 50
     }
 
     override fun setBlocksInChunk(chunk: BaseChunkGenerator.GeneratingChunk) {

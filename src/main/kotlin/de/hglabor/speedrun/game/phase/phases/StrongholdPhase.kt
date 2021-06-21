@@ -41,7 +41,11 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
     override fun tpPlayers() = with(GameState.Stronghold.world) {
         UserList.players.forEach { it.teleport(this.spawnLocation) }
         taskRunLater(10L) {
-            val strongholdLoc: Location = locateNearestStructure(spawnLocation, StructureType.STRONGHOLD, 5000, false)!!
+            // Official Minecraft Wiki:
+            // All strongholds are located at random coordinates within rings in most biomes,
+            // where each ring is a certain radius from the center of the world (X=0, Z=0)
+            // The first ring has 3 strongholds within 1,280-2,816 blocks of the origin
+            val strongholdLoc: Location = locateNearestStructure(Location(world, 0.0, 0.0, 0.0), StructureType.STRONGHOLD, 2816, false)!!
             spawnLoc = getSpawnLoc(strongholdLoc)
             UserList.players.forEach { it.teleport(spawnLoc) }
         }
@@ -55,21 +59,11 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
         return false
     }
 
-    private fun getSpawnLoc(strLoc: Location, radius: Int = 150): Location = with(strLoc) {
-        var mX = x-radius
-        while (mX < x+radius) {
-            for (mY in 25..49) {
-                var mZ = z-radius
-                while (mZ < z+radius) {
-                    val block: Block = world!!.getBlockAt(mX.toInt(), mY, mZ.toInt())
-                    if (block.type == Material.COBBLESTONE_STAIRS) {
-                        return block.location.clone().add(0, 1, 0)
-                    }
-                    mZ++
+    private fun getSpawnLoc(strLoc: Location, radius: Int = 10): Location = with(strLoc) {
+        for (mX in x.toInt()-radius..x.toInt()+radius) for (mY in 25..49) for (mZ in z.toInt()-radius..z.toInt()+radius) {
+                    val block: Block = world!!.getBlockAt(mX, mY, mZ)
+                    if (block.type == Material.SMOOTH_STONE_SLAB) return block.location.clone().add(0, 1, 0)
                 }
-            }
-            mX++
-        }
         return strLoc
     }
 
