@@ -86,6 +86,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
     fun onInteract(event: PlayerInteractEvent) = with(event) {
             if (item?.type == Material.ENDER_EYE && clickedBlock?.type != Material.END_PORTAL_FRAME) cancel()
             if (clickedBlock?.type == Material.IRON_DOOR && action == Action.RIGHT_CLICK_BLOCK) {
+                if (player.gameMode == GameMode.SPECTATOR) return
                 clickedBlock!!.apply {
                     val data = (blockData as Openable)
                     data.isOpen = true
