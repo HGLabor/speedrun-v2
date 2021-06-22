@@ -4,19 +4,17 @@ import de.hglabor.speedrun.command.*
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.listener.*
-import de.hglabor.speedrun.location.LOBBY_SPAWN
+import de.hglabor.speedrun.player.PlayerVisibility
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.*
+import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import de.hglabor.speedrun.worlds.generator.FlatDiamondGenerator
 import de.hglabor.speedrun.worlds.structures
-import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.register
 import net.axay.kspigot.main.KSpigot
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi
 import nl.rutgerkok.worldgeneratorapi.WorldRef
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationType
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.generator.ChunkGenerator
 
 val PLUGIN by lazy { Speedrun.INSTANCE }
@@ -45,12 +43,8 @@ class Speedrun : KSpigot() {
         LoadStructuresCommand.register("loadstructures")
         RenewCommand.register("renew")
 
-        listen<PlayerJoinEvent> {
-            it.player.teleport(LOBBY_SPAWN)
-            it.player.survival()
-            it.player.clearInv()
-        }
-        
+        PlayerVisibility
+
         Worlds.createWorlds()
         structures()
 
@@ -72,6 +66,7 @@ class Speedrun : KSpigot() {
     fun updateScoreboards() {
         UserList.players.forEach { it.updateScoreboard() }
     }
+
     override fun shutdown() {}
 }
 

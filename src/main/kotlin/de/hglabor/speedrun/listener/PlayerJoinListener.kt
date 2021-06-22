@@ -3,6 +3,7 @@ package de.hglabor.speedrun.listener
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhaseManager
+import de.hglabor.speedrun.location.LOBBY_SPAWN
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
 import net.axay.kspigot.event.listen
@@ -17,6 +18,10 @@ fun joinListener() {
                 (" ($playerCount/${Config.MIN_PLAYERS.getInt()})").col(if (playerCount >= Config.MIN_PLAYERS.getInt()) "green" else "yellow")
         it.player.createScoreboard()
         it.player.updateScoreboard()
+
+        it.player.teleport(LOBBY_SPAWN)
+        it.player.survival()
+        it.player.clearInv()
     }
 
     listen<PlayerLoginEvent> {
