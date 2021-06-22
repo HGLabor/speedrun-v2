@@ -35,6 +35,8 @@ repositories {
     maven("https://repo.codemc.io/repository/maven-public/")
     // FAWE
     maven("https://mvn.intellectualsites.com/content/repositories/releases/")
+    // CloudNet
+    maven("https://repo.cloudnetservice.eu/repository/releases/")
 }
 
 dependencies {
@@ -51,6 +53,8 @@ dependencies {
     implementation("de.hglabor:hglabor-utils:0.0.6")
     // WorldGeneratorApi
     compileOnly("nl.rutgerkok:worldgeneratorapi:1.1.4")
+    // CloudNet
+    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
 }
 
 /*

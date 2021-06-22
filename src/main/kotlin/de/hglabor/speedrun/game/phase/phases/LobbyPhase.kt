@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.game.phase.phases
 
+import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
@@ -33,7 +34,13 @@ class LobbyPhase : GamePhase(0, -1, -1) {
                 grayBroadcast("$PREFIX ${KColors.ORANGERED}Not enough players (${UserList.size}). Start cancelled")
                 task?.cancel()
             }
-            120, 90, 60, 30, 20, 10 -> announceTime()
+            120, 90, 60, 30, 20 -> announceTime()
+            10 -> {
+                announceTime()
+                BukkitCloudNetHelper.setApiMotd("Starting...")
+                BukkitCloudNetHelper.setState("STARTING")
+            }
+
         }
         time = startingIn.toLong()
         PLUGIN.updateScoreboards()
@@ -66,7 +73,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
         task = task(period = 20L) {
             startingIn--
             if (startingIn <= 5) announceTime()
-            if (startingIn == 0) GamePhaseManager.nextPhase()
+            if (startingIn == 0) {
+                BukkitCloudNetHelper.changeToIngame()
+                GamePhaseManager.nextPhase()
+            }
         }
     }
 
@@ -87,7 +97,13 @@ class LobbyPhase : GamePhase(0, -1, -1) {
 
     @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
-        if (hasStarted && UserList.size < Config.MIN_PLAYERS.getInt()) startingIn = -1
+        if (hasStarted && UserList.size < Config.MIN_PLAYERS.getInt()) {
+            if (startingIn <= 10) {
+                BukkitCloudNetHelper.setApiMotd("Waiting for players...")
+                BukkitCloudNetHelper.setState("LOBBY")
+            }
+            startingIn = -1
+        }
     }
 
     override fun onRenew(player: Player): Boolean {
