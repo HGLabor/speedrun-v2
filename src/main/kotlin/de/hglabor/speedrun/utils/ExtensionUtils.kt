@@ -15,9 +15,7 @@ import org.bukkit.potion.PotionEffectType
 
 fun Entity.isCreative(): Boolean = this is Player && this.gameMode == GameMode.CREATIVE
 
-fun Cancellable.cancel() {
-    this.isCancelled = true
-}
+fun Cancellable.cancel() { this.isCancelled = true }
 
 fun Player.clearInv() {
     val item = inventory.getItem(PlayerVisibility.SLOT)

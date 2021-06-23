@@ -20,6 +20,7 @@ class WinPhase : GamePhase(0, -1, -1) {
 
     init {
         tpPlayers()
+        UserList.players.forEach { it.survival() }
 
         broadcastLine()
         val magic = ("|".repeat(11)).col("gray", "magic")
