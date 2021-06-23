@@ -58,12 +58,13 @@ fun List<Material>.stack(): List<ItemStack> {
 fun Inventory.addAll(items: List<ItemStack>) = items.forEach { this.addItem(it) }
 
 fun World.speedrunGameRules(): World {
-    this.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
-    this.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
-    this.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
-    this.setGameRule(GameRule.DO_MOB_SPAWNING, false)
-    this.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false)
-    this.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
+    time = 6000
+    setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
+    setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
+    setGameRule(GameRule.DO_WEATHER_CYCLE, false)
+    setGameRule(GameRule.DO_MOB_SPAWNING, false)
+    setGameRule(GameRule.SHOW_DEATH_MESSAGES, false)
+    setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true)
     return this
 }
 
