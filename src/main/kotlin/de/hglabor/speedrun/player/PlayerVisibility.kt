@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 
 object PlayerVisibility {
-    private const val SLOT = 17
+    const val SLOT = 17
 
     private object Materials {
         val visible = Material.SOUL_TORCH

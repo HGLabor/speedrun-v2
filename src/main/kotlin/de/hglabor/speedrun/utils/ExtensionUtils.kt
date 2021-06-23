@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.utils
 
+import de.hglabor.speedrun.player.PlayerVisibility
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import net.axay.kspigot.extensions.geometry.add
@@ -19,7 +20,9 @@ fun Cancellable.cancel() {
 }
 
 fun Player.clearInv() {
+    val item = inventory.getItem(PlayerVisibility.SLOT)
     this.inventory.clear()
+    this.inventory.setItem(PlayerVisibility.SLOT, item)
 }
 
 fun Player.noMove(seconds: Int) {
