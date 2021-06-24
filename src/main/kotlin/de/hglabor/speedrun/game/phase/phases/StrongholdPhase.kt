@@ -17,8 +17,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerPortalEvent
+import org.bukkit.event.player.*
 import org.bukkit.inventory.ItemStack
 
 
@@ -69,11 +68,11 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
 
     @EventHandler
     fun onPortal(event: PlayerPortalEvent) = with(event) {
-        if (GamePhaseManager.currentState == GameState.Stronghold && ingameNotFinished(player)) {
-            cancel()
-            finish(player.uniqueId)
-            taskRunLater(5L) { player.teleport(from) } // Tp back because its broken
-        }
+        if (GamePhaseManager.currentState != GameState.Stronghold) return
+        if (cause != PlayerTeleportEvent.TeleportCause.END_PORTAL) return
+        cancel()
+        if(!ingameNotFinished(player)) return
+        finish(player.uniqueId)
     }
 
     @EventHandler(priority = EventPriority.HIGH)
