@@ -53,7 +53,11 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     }
 
     override fun state() = GameState.Lobby
-    override fun stop() { super.stop(); task?.cancel() }
+    override fun stop() {
+        super.stop()
+        task?.cancel()
+        BukkitCloudNetHelper.changeToIngame()
+    }
 
     override fun onStart(player: Player): Boolean {
         val time = Config.START_TIME_START_COMMAND.getInt()
@@ -73,10 +77,7 @@ class LobbyPhase : GamePhase(0, -1, -1) {
         task = task(period = 20L) {
             startingIn--
             if (startingIn <= 5) announceTime()
-            if (startingIn == 0) {
-                BukkitCloudNetHelper.changeToIngame()
-                GamePhaseManager.nextPhase()
-            }
+            if (startingIn == 0) GamePhaseManager.nextPhase()
         }
     }
 
