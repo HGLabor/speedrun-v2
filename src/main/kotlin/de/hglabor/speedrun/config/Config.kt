@@ -20,6 +20,7 @@ enum class Config(private val path: String, value: Any) {
     CRAFTING_ROUNDS("craftingRounds", 5),
     CRAFTING_PREP_TIME("craftingPreparation", 5),
     CRAFTING_INGAME_TIME("craftingIngame", 15),
+    CRAFTING_ITEMS("craftingItems", arrayOf<String>()),
 
     // Portal
     PORTAL_INGAME_TIME("portalIngame", 60),
@@ -59,4 +60,5 @@ enum class Config(private val path: String, value: Any) {
     fun getInt(): Int = this.configValue as Int
     fun getBoolean(): Boolean = this.configValue as Boolean
     fun getString(): String = this.configValue as String
+    @Suppress("UNCHECKED_CAST") fun getStringList(): ArrayList<String> = this.configValue as ArrayList<String>
 }

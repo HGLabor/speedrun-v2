@@ -1,7 +1,7 @@
 package de.hglabor.speedrun.game.phase.phases.crafting
 
-import de.hglabor.speedrun.utils.addAll
-import de.hglabor.speedrun.utils.stack
+import de.hglabor.speedrun.config.Config
+import de.hglabor.speedrun.utils.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.*
@@ -9,10 +9,15 @@ import java.util.*
 
 object CraftingUtils {
     private val random = Random()
-    private val LOG_ITEMS = arrayOf("_planks", "stick", "_slab", "_planks")
-    private val EXCLUDED_ITEMS = arrayOf(
-        "jungle", "spruce", "birch", "acacia",
-        "dark_oak", "crimson", "warped", "carpet", "pane", "terracotta", "glass",
+    private val WOOD_TYPES = arrayOf("jungle", "spruce", "birch", "acacia",
+        "dark_oak", "crimson", "warped", "oak")
+    private val LOG_ITEMS: Array<String> = arrayOf("_planks", "stick", "_planks", *WOOD_TYPES.let { array ->
+        val list = ArrayList<String>()
+        array.forEach { list += it + "_planks" }
+        return@let list.toTypedArray()
+    })
+    private val EXCLUDED_ITEMS: Array<String> = arrayOf(
+        *WOOD_TYPES.filter { it != "oak" }.toTypedArray(), "carpet", "pane", "terracotta", "glass",
         "banner", "bed", "wall", "slab", "stairs", "blackstone", "quartz", "sandstone",
         "polished", "chiseled", "pillar"
     )
@@ -35,6 +40,8 @@ object CraftingUtils {
 
     private val toCraftMaterials: List<Material>
         get() {
+            val configItems = Config.CRAFTING_ITEMS.getStringList()
+            if (configItems.isNotEmpty()) return configItems.materials()
             val materials: MutableList<Material> = Material.values().filter { !isExcludedMaterial(it) }.filter { isShapedRecipe(it) }.toMutableList()
             return materials.apply { addAll(SPECIAL_ITEMS)}
         }

@@ -54,6 +54,13 @@ fun List<Material>.stack(): List<ItemStack> {
     return itemStacks
 }
 fun Inventory.addAll(items: List<ItemStack>) = items.forEach { this.addItem(it) }
+fun List<String>.materials(): List<Material> {
+    val list = ArrayList<Material>()
+    forEach {
+        list.add(Material.getMaterial(it.toUpperCase()) ?: return@forEach)
+    }
+    return list
+}
 
 fun World.speedrunGameRules(): World {
     time = 6000
