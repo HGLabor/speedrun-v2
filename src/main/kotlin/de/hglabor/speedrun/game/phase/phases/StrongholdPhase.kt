@@ -58,6 +58,9 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
         return false
     }
 
+    // Cancel tp to spawn when moving under y 10
+    override fun onFall(player: Player) {}
+
     private fun getSpawnLoc(strLoc: Location, radius: Int = 10): Location = with(strLoc) {
         for (mX in x.toInt()-radius..x.toInt()+radius) for (mY in 25..49) for (mZ in z.toInt()-radius..z.toInt()+radius) {
                     val block: Block = world!!.getBlockAt(mX, mY, mZ)

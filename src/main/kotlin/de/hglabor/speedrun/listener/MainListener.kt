@@ -1,6 +1,5 @@
 package de.hglabor.speedrun.listener
 
-import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.utils.cancel
 import de.hglabor.speedrun.utils.isCreative
@@ -32,7 +31,7 @@ fun mainListener() {
         if (!it.player.isCreative()) it.cancel()
     }
     listen<PlayerMoveEvent> {
-        if (it.player.location.y <= 10 && GamePhaseManager.currentState != GameState.Stronghold) it.player.teleport(it.player.world.spawnLocation)
+        if (it.player.location.y <= 10) GamePhaseManager.currentPhase.onFall(it.player)
     }
     listen<PlayerInteractAtEntityEvent> {
         if (!it.player.isCreative() && it.rightClicked is ArmorStand) it.cancel()

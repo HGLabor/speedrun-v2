@@ -22,10 +22,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 var CRAFTING_SPAWNS: MutableList<Location>? = null; private set
-var PORTAL_SPAWNS: MutableList<Location>? = null
+var PORTAL_SPAWNS_LIST = ArrayList<Location>()
 val LAVA_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/${Config.PORTAL_SCHEMATIC.getString()}.schem")
 const val LAVA_ARENA_WIDTH = 20
-const val ARENA_COUNT = 20
+const val ARENA_COUNT = 30
 
 fun structures() {
     craftingStructures()
@@ -66,11 +66,10 @@ fun portalStructures() = with(GameState.Portal.world) {
 }
 
 fun pastePortals(location: Location, clipboard: Clipboard) {
-    PORTAL_SPAWNS = ArrayList()
-    for (i in 0 until ARENA_COUNT) {
+    for (i in 0..ARENA_COUNT) {
         val newLoc = location.clone().add((LAVA_ARENA_WIDTH+5)*i, 0, 0)
         pastePortal(newLoc, clipboard)
-        PORTAL_SPAWNS!!.add(newLoc)
+        PORTAL_SPAWNS_LIST.add(newLoc)
     }
 }
 

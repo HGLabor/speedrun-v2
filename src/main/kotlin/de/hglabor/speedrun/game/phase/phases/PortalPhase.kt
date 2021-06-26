@@ -8,15 +8,17 @@ import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
 import de.hglabor.speedrun.worlds.*
 import de.hglabor.utils.noriskutils.SoundUtils
-import org.bukkit.ChatColor
-import org.bukkit.Material
+import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PORTAL_INGAME_TIME.getInt()) {
     private val items: List<Material> = listOf(Material.DIAMOND_PICKAXE, Material.WATER_BUCKET, Material.BUCKET, Material.FLINT_AND_STEEL)
+    private var spawns: HashMap<UUID, Location> = HashMap()
+
     override fun startPreparationPhase() {}
     override fun startIngamePhase() { items() }
 
@@ -32,15 +34,19 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
 
     override fun onRenew(player: Player): Boolean {
         // When portal spawns are non-null, the clipboard is probably non-null too
-        if (ingameNotFinished(player) && PORTAL_SPAWNS != null) {
-            val loc = PORTAL_SPAWNS!![UserList.players.indexOf(player)]
-            pastePortal(loc, requirePortalClipboard())
-            player.teleport(loc)
+        if (!ingameNotFinished(player)) return false
+        spawns[player.uniqueId]?.let {
+            pastePortal(it, requirePortalClipboard())
+            player.teleport(it)
             items(player)
             SoundUtils.playTeleportSound(player)
             return true
         }
         return false
+    }
+
+    override fun onFall(player: Player) {
+        player.teleport(spawns[player.uniqueId] ?: return)
     }
 
     override fun buildingAllowed(): Boolean = true
@@ -51,9 +57,10 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
     }
 
     override fun tpPlayers() {
-        PORTAL_SPAWNS = PORTAL_SPAWNS!!.shuffled().toMutableList()
+        val shuffled = PORTAL_SPAWNS_LIST.shuffled()
         UserList.players.forEachIndexed { index, player ->
-            val loc = PORTAL_SPAWNS!![index]
+            spawns[player.uniqueId] = shuffled[index]
+            val loc = spawns[player.uniqueId] ?: return
             loc.x += 0.5
             loc.y = 20.0
             loc.z += 0.5
