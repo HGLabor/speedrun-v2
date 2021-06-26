@@ -3,6 +3,7 @@ package de.hglabor.speedrun
 import de.hglabor.speedrun.command.*
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.phase.GamePhaseManager
+import de.hglabor.speedrun.game.phase.phases.crafting.CraftingUtils
 import de.hglabor.speedrun.listener.*
 import de.hglabor.speedrun.player.PlayerVisibility
 import de.hglabor.speedrun.player.UserList
@@ -44,6 +45,7 @@ class Speedrun : KSpigot() {
         RenewCommand.register("renew")
 
         PlayerVisibility
+        CraftingUtils
 
         Worlds.createWorlds()
         structures()
