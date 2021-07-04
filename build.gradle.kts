@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 /*
  * BUILD CONSTANTS
  */
-val JVM_VERSION = JavaVersion.VERSION_11
+val JVM_VERSION = JavaVersion.VERSION_16
 val JVM_VERSION_STRING = JVM_VERSION.versionString
 /*
  * PROJECT
@@ -17,7 +17,7 @@ version = "0.0.1"
  * PLUGINS
  */
 plugins {
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.5.0"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     kotlin("plugin.serialization") version "1.4.21"
 }
@@ -42,17 +42,17 @@ repositories {
 dependencies {
     implementation(kotlin("reflect"))
     // CraftBukkit
-    compileOnly("org.bukkit", "craftbukkit", "1.16.5-R0.1-SNAPSHOT")
+    compileOnly("org.bukkit", "craftbukkit", "1.17-R0.1-SNAPSHOT")
     // PAPER
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT")
     // FAWE
     compileOnly("com.intellectualsites.fawe:FAWE-Bukkit:1.16-637")
     // KSPIGOT
-    implementation("net.axay:kspigot:1.16.26")
+    implementation("net.axay:kspigot:1.17.2")
     // HGLabor Utils
     implementation("de.hglabor:hglabor-utils:0.0.6")
     // WorldGeneratorApi
-    compileOnly("nl.rutgerkok:worldgeneratorapi:1.1.4")
+    compileOnly("nl.rutgerkok:worldgeneratorapi:1.2.1")
     // CloudNet
     compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
 }
@@ -68,14 +68,6 @@ java.targetCompatibility = JVM_VERSION
 
 tasks.withType<KotlinCompile> {
     configureJvmVersion()
-}
-
-// SHADOW
-
-tasks {
-    shadowJar {
-        simpleRelocate("net.axay.kspigot")
-    }
 }
 
 /*
