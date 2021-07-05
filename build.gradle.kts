@@ -1,30 +1,11 @@
-@file:Suppress("PropertyName")
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-/*
- * BUILD CONSTANTS
- */
-val JVM_VERSION = JavaVersion.VERSION_16
-val JVM_VERSION_STRING = JVM_VERSION.versionString
-/*
- * PROJECT
- */
 group = "de.hglabor"
 version = "0.0.1"
 
-/*
- * PLUGINS
- */
 plugins {
     kotlin("jvm") version "1.5.0"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    kotlin("plugin.serialization") version "1.4.21"
 }
 
-/*
- * DEPENDENCY MANAGEMENT
- */
 repositories {
     mavenLocal()
     mavenCentral()
@@ -57,33 +38,12 @@ dependencies {
     compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
 }
 
-/*
- * BUILD
- */
-
-// JVM VERSION
-
-java.sourceCompatibility = JVM_VERSION
-java.targetCompatibility = JVM_VERSION
-
-tasks.withType<KotlinCompile> {
-    configureJvmVersion()
-}
-
-/*
- * EXTENSIONS
- */
-
-val JavaVersion.versionString
-    get() = majorVersion.let {
-        val version = it.toInt()
-        if (version <= 10) "1.$it" else it
+tasks {
+    compileJava {
+        options.release.set(16)
+        options.encoding = "UTF-8"
     }
-
-fun KotlinCompile.configureJvmVersion() {
-    kotlinOptions.jvmTarget = JVM_VERSION_STRING
-}
-
-fun ShadowJar.simpleRelocate(pattern: String) {
-    relocate(pattern, "${project.group}.${project.name.toLowerCase()}.shadow.$pattern")
+    compileKotlin {
+        kotlinOptions.jvmTarget = "16"
+    }
 }
