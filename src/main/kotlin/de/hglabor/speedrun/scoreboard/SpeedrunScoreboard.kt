@@ -23,7 +23,7 @@ object SpeedrunScoreboard {
     private const val timeName = "time"
 
     fun create(player: SpeedRunner) {
-        ScoreboardFactory.create(player);
+        ScoreboardFactory.create(player, "Speedrun", false)
         ScoreboardFactory.addEntry(player, "9", "", 9)
         ScoreboardFactory.addEntry(player, disciplineHeadingName, "Discipline:", 8)
         ScoreboardFactory.addEntry(player, disciplineName, "", 7)
@@ -38,8 +38,8 @@ object SpeedrunScoreboard {
 
     fun update(player: SpeedRunner) {
         if (player.scoreboardNull()) {
-            Bukkit.getLogger().warning("Scoreboard not yet created for player ${player.name}. Creating new one.");
-            create(player);
+            Bukkit.getLogger().warning("Scoreboard not yet created for player ${player.name}. Creating new one.")
+            create(player)
         }
         // Change it to
         // Players:

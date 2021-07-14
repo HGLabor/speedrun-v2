@@ -1,21 +1,13 @@
 package de.hglabor.speedrun.player
 
-import de.hglabor.utils.noriskutils.ChatUtils
-import de.hglabor.utils.noriskutils.scoreboard.ScoreboardPlayer
+import de.hglabor.speedrun.scoreboard.SpeedrunScoreboardPlayer
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
-import org.bukkit.scoreboard.Objective
-import org.bukkit.scoreboard.Scoreboard
 import java.util.*
 
-class SpeedRunner : ScoreboardPlayer {
-    val uuid: UUID
-    val name: String?
+class SpeedRunner(uuid: UUID) : SpeedrunScoreboardPlayer(uuid) {
+    val name: String? = Bukkit.getOfflinePlayer(uuid).name
     var timeNeededTotal: Float = 0.0F
-    var timeNeeded: Float = 0.0F
     private var status: Status? = null
-    private var mScoreboard: Scoreboard? = null
-    private var mObjective: Objective? = null
 
     fun addTotalTime(time: Float) { timeNeededTotal += time }
 
@@ -23,37 +15,9 @@ class SpeedRunner : ScoreboardPlayer {
         PLAYER, SPECTATOR
     }
 
-    constructor(uuid: UUID) {
-        this.uuid = uuid
-        name = Bukkit.getOfflinePlayer(uuid).name
-        status = Status.PLAYER
-    }
-
-    constructor(player: Player) {
-        uuid = player.uniqueId
-        name = player.name
-        status = Status.PLAYER
-    }
-
-    constructor() {
-        uuid = UUID.randomUUID()
-        name = "Dummy"
-    }
-
-    override fun getScoreboard(): Scoreboard? = mScoreboard
-
     fun scoreboardNull(): Boolean = mScoreboard == null
 
-    override fun setScoreboard(scoreboard: Scoreboard?) {
-        mScoreboard = scoreboard
+    init {
+        status = Status.PLAYER
     }
-
-    override fun getObjective(): Objective? = mObjective
-
-    override fun setObjective(objective: Objective?) {
-        mObjective = objective
-    }
-
-    override fun getLocale(): Locale = ChatUtils.locale(uuid)
-    override fun getPlayer(): Player = Bukkit.getPlayer(uuid)!!
 }

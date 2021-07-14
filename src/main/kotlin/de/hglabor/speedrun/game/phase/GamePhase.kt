@@ -6,12 +6,12 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.*
 import de.hglabor.speedrun.worlds.Worlds
-import de.hglabor.utils.noriskutils.SoundUtils
-import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
+import net.axay.kspigot.extensions.server
 import net.axay.kspigot.runnables.*
+import net.axay.kspigot.sound.sound
 import org.bukkit.*
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -41,7 +41,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     }
 
     init {
-        register() // Register this as event listener
+        server.pluginManager.registerEvents(this, PLUGIN) // Register this as event listener
 
         // Display title
         UserList.players.forEach { player ->
@@ -50,7 +50,9 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         // Teleport players delayed and set gamemode to survival
         taskRunLater(20L) {
             UserList.players.forEach { player ->
-                SoundUtils.playTeleportSound(player)
+                sound(Sound.ENTITY_SHULKER_TELEPORT) {
+                    playFor(player)
+                }
                 player.survival()
             }
             if (roundDuration != -1) {

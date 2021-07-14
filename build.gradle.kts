@@ -3,13 +3,12 @@ group = "de.hglabor"
 version = "0.0.1"
 
 plugins {
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.5.21"
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
     // Paper
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
@@ -31,7 +30,7 @@ dependencies {
     // KSPIGOT
     implementation("net.axay:kspigot:1.17.2")
     // HGLabor Utils
-    implementation("de.hglabor:hglabor-utils:0.0.6")
+    implementation("de.hglabor:hglabor-utils:0.0.12")
     // WorldGeneratorApi
     compileOnly("nl.rutgerkok:worldgeneratorapi:1.2.1")
     // CloudNet
