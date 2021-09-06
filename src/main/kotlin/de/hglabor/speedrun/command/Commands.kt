@@ -48,7 +48,6 @@ fun commands() {
 
     // Start
     command("start") {
-        requires { it.player.hasPermission("speedrun.command.start") }
         simpleExecutes {
             if (GamePhaseManager.currentPhase.onStart(it.source.player)) grayBroadcast("$PREFIX ${KColors.YELLOW}Force started")
         }
