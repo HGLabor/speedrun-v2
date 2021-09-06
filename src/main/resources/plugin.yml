@@ -4,27 +4,6 @@ main: de.hglabor.speedrun.Speedrun
 api-version: 1.16
 depend: [WorldGeneratorApi]
 
-commands:
-  next:
-    description: Skips the phase
-    usage: /next
-    permission: group.coder
-  start:
-    description: Starts the game
-    usage: /start
-    permission: group.contentcreator, group.coder
-  speedrun-reload:
-    description: Reloads the speedrun config
-    usage: /speedrun-reload
-    permission: group.coder
-  loadstructures:
-    description: Loads the speedrun structures
-    usage: /loadstructures
-    permission: group.coder
-  renew:
-    description: Renew
-    usage: /renew
-
 libraries:
   - "net.axay:kspigot:1.17.2"
   - "org.jetbrains.kotlin:kotlin-reflect:1.5.21"

@@ -1,6 +1,6 @@
 package de.hglabor.speedrun
 
-import de.hglabor.speedrun.command.*
+import de.hglabor.speedrun.command.commands
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.game.phase.phases.crafting.CraftingUtils
@@ -11,7 +11,6 @@ import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import de.hglabor.speedrun.worlds.generator.FlatDiamondGenerator
 import de.hglabor.speedrun.worlds.structures
-import net.axay.kspigot.extensions.bukkit.register
 import net.axay.kspigot.main.KSpigot
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi
 import nl.rutgerkok.worldgeneratorapi.WorldRef
@@ -38,11 +37,7 @@ class Speedrun : KSpigot() {
         joinListener()
         quitListener()
 
-        StartCommand.register("start")
-        NextPhaseCommand.register("next")
-        ReloadCommand.register("speedrun-reload")
-        LoadStructuresCommand.register("loadstructures")
-        RenewCommand.register("renew")
+        commands()
 
         PlayerVisibility
         CraftingUtils
