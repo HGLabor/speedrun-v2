@@ -123,7 +123,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                     onStop()
                     ""
                 }
-                else -> ""
+                else -> timeHeading
             }
             // schon schön ngl
             time = when {

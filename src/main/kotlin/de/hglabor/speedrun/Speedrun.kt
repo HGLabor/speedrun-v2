@@ -53,17 +53,16 @@ class Speedrun : KSpigot() {
         GamePhaseManager.start()
     }
 
-    override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator? {
-        return WorldGeneratorApi
-            .getInstance(this, 0, 5)
-            .createCustomGenerator(WorldRef.ofName("stronghold")) {
-                it.baseTerrainGenerator = FlatDiamondGenerator()
-                // Disable all decorations
-                it.worldDecorator.withoutAllDefaultDecorations()
-                // Enable strongholds again afterwards so only strongholds are enabled
-                it.worldDecorator.setDefaultDecoratorsEnabled(DecorationType.STRONGHOLDS, true)
-            }
-    }
+    override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator = WorldGeneratorApi
+        .getInstance(this, 0, 6)
+        .createCustomGenerator(WorldRef.ofName("stronghold")) {
+            it.baseTerrainGenerator = FlatDiamondGenerator()
+            // Disable all decorations
+            it.worldDecorator.withoutAllDefaultDecorations()
+            // Enable strongholds again afterwards so only strongholds are enabled
+            it.worldDecorator.setDefaultDecoratorsEnabled(DecorationType.STRONGHOLDS, true)
+            logger.info("Enabled flat diamond generator for world \"$worldName\".")
+        }
 
     fun updateScoreboards() {
         UserList.players.forEach { it.updateScoreboard() }
