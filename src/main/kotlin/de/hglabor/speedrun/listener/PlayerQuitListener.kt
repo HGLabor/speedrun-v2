@@ -22,7 +22,7 @@ fun quitListener() {
             // Cancel game
             grayBroadcast("$PREFIX ${ChatColor.RED}Cancelled game (not enough players: ${UserList.size})")
             val restartIn = Config.CANCEL_RESTART_TIME.getInt()
-            grayBroadcast("$PREFIX ${KColors.ORANGE}Restarting in ${KColors.WHITE}$restartIn ${KColors.ORANGE}second")
+            grayBroadcast("$PREFIX ${KColors.ORANGE}Restarting in ${KColors.WHITE}$restartIn ${KColors.ORANGE}second(s)")
             taskRunLater(restartIn*20L) { command("restart") }
         }
     }
