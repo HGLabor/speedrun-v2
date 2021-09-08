@@ -14,6 +14,7 @@ import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.*
@@ -21,10 +22,17 @@ import org.bukkit.inventory.ItemStack
 
 
 class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING_PREP_TIME.getInt(), Config.CRAFTING_INGAME_TIME.getInt()) {
+    private val items = ArrayList<Material>()
     private var itemToCraft: ItemStack? = null
 
+    private fun newRandomItem(): Material  {
+        val item = CraftingUtils.randomItem()
+        return if (item !in items) item.apply { items += this }
+        else newRandomItem()
+    }
+
     override fun startPreparationPhase() {
-        val material = CraftingUtils.randomItemToCraft
+        val material = newRandomItem()
         itemToCraft = ItemBuilder(material).setName(ChatColor.AQUA.toString() + material.name).build()
         UserList.players.forEach { player ->
             player.title("§6Round $roundNumber", "§cCraft (a) §b${itemToCraft?.type?.name}", 20, 40, 20)
