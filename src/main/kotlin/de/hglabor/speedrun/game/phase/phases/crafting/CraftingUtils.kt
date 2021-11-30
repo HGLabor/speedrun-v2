@@ -5,10 +5,8 @@ import de.hglabor.speedrun.utils.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.*
-import java.util.*
 
 object CraftingUtils {
-    private val random = Random()
     private val WOOD_TYPES = arrayOf("jungle", "spruce", "birch", "acacia",
         "dark_oak", "crimson", "warped", "oak")
     private val LOG_ITEMS: Array<String> = arrayOf("_planks", "stick", "_planks", *WOOD_TYPES.let { array ->
@@ -22,7 +20,7 @@ object CraftingUtils {
         "polished", "chiseled", "pillar"
     )
     private val SPECIAL_ITEMS = arrayOf(Material.WARPED_FUNGUS_ON_A_STICK, Material.RED_BED)
-    private val TO_CRAFT_MATERIALS = toCraftMaterials
+    private val TO_CRAFT_MATERIALS = getToCraftMaterials()
     private fun getRecipes(itemStack: ItemStack): List<Recipe> = Bukkit.getRecipesFor(itemStack)
     private fun Material.recipes() = getRecipes(ItemStack(this))
 
@@ -34,20 +32,17 @@ object CraftingUtils {
         return isShapedRecipe
     }
 
-    private fun isExcludedMaterial(material: Material): Boolean {
-        return EXCLUDED_ITEMS.any { material.name.toLowerCase().contains(it) }
+    private fun isExcludedMaterial(material: Material): Boolean = EXCLUDED_ITEMS.any { material.name.contains(it, ignoreCase = true) }
+
+    private fun getToCraftMaterials(): List<Material> {
+        val configItems = Config.CRAFTING_ITEMS.getStringList()
+        if (configItems.isNotEmpty()) return configItems.materials()
+        val materials: MutableList<Material> = Material.values().filter { !isExcludedMaterial(it) }.filter { isShapedRecipe(it) }.toMutableList()
+        return materials.apply { addAll(SPECIAL_ITEMS)}
     }
 
-    private val toCraftMaterials: List<Material>
-        get() {
-            val configItems = Config.CRAFTING_ITEMS.getStringList()
-            if (configItems.isNotEmpty()) return configItems.materials()
-            val materials: MutableList<Material> = Material.values().filter { !isExcludedMaterial(it) }.filter { isShapedRecipe(it) }.toMutableList()
-            return materials.apply { addAll(SPECIAL_ITEMS)}
-        }
-
     private fun getOriginMaterial(itemStack: ItemStack): List<ItemStack>? {
-        for (logItem in LOG_ITEMS) if (itemStack.type.name.toLowerCase().endsWith(logItem)) return listOf(Material.OAK_LOG.stack())
+        for (logItem in LOG_ITEMS) if (itemStack.type.name.lowercase().endsWith(logItem)) return listOf(Material.OAK_LOG.stack())
 
         val itemStacks: MutableList<ItemStack> = ArrayList()
         with(itemStacks) {
@@ -63,8 +58,7 @@ object CraftingUtils {
         return itemStacks.ifEmpty { null }
     }
 
-    val randomItemToCraft: Material
-        get() = TO_CRAFT_MATERIALS[random.nextInt(TO_CRAFT_MATERIALS.size)]
+    fun randomItem() = TO_CRAFT_MATERIALS.random()
 
     fun getCraftingItems(material: Material?): List<ItemStack> {
         val recipes = getRecipes(

@@ -11,12 +11,14 @@ object Worlds : HashMap<String, World>() {
     fun createWorlds() {
         deleteWorlds()
         GameState.values().forEach {
-            val world = Bukkit.createWorld(WorldCreator(it.name.toLowerCase()).environment(getEnv(it.name)))!!.speedrunGameRules()
+            val creator = WorldCreator(it.name.lowercase())
+            when(it.name.lowercase()) {
+                "crystal" -> creator.environment(World.Environment.THE_END)
+            }
+            val world = Bukkit.createWorld(creator)!!.speedrunGameRules()
             this[world.name] = world
         }
     }
-
-    private fun getEnv(worldName: String): World.Environment = if (worldName.toLowerCase() == "crystal") World.Environment.THE_END else World.Environment.NORMAL
 
     /** Delete worlds that have to be regenerated each time */
     private fun deleteWorlds() {
@@ -28,5 +30,5 @@ object Worlds : HashMap<String, World>() {
         FileUtils.deleteDirectory(File(PLUGIN.server.worldContainer.absolutePath + "\\$worldName"))
     }
 
-    override fun get(key: String): World? = super.get(key.toLowerCase())
+    override fun get(key: String): World? = super.get(key.lowercase())
 }

@@ -8,6 +8,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
+import de.hglabor.speedrun.utils.cloudNet
 import de.hglabor.speedrun.utils.grayBroadcast
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.runnables.KSpigotRunnable
@@ -37,8 +38,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
             120, 90, 60, 30, 20 -> announceTime()
             10 -> {
                 announceTime()
-                BukkitCloudNetHelper.setApiMotd("Starting...")
-                BukkitCloudNetHelper.setState("STARTING")
+                cloudNet {
+                    BukkitCloudNetHelper.setApiMotd("Starting...")
+                    BukkitCloudNetHelper.setState("STARTING")
+                }
             }
 
         }
@@ -56,7 +59,9 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun stop() {
         super.stop()
         task?.cancel()
-        BukkitCloudNetHelper.changeToIngame()
+        cloudNet {
+            BukkitCloudNetHelper.changeToIngame()
+        }
     }
 
     override fun onStart(player: Player): Boolean {
@@ -100,8 +105,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     fun onPlayerQuit(event: PlayerQuitEvent) {
         if (hasStarted && UserList.size < Config.MIN_PLAYERS.getInt()) {
             if (startingIn <= 10) {
-                BukkitCloudNetHelper.setApiMotd("Waiting for players...")
-                BukkitCloudNetHelper.setState("LOBBY")
+                cloudNet {
+                    BukkitCloudNetHelper.setApiMotd("Waiting for players...")
+                    BukkitCloudNetHelper.setState("LOBBY")
+                }
             }
             startingIn = -1
         }
