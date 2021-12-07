@@ -6,7 +6,9 @@ import de.hglabor.speedrun.scoreboard.SpeedrunScoreboard
 import net.axay.kspigot.extensions.geometry.add
 import org.bukkit.*
 import org.bukkit.block.Block
-import org.bukkit.entity.*
+import org.bukkit.entity.Entity
+import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -57,7 +59,7 @@ fun Inventory.addAll(items: List<ItemStack>) = items.forEach { this.addItem(it) 
 fun List<String>.materials(): List<Material> {
     val list = ArrayList<Material>()
     forEach {
-        list.add(Material.getMaterial(it.toUpperCase()) ?: return@forEach)
+        list.add(Material.getMaterial(it.uppercase()) ?: return@forEach)
     }
     return list
 }
@@ -81,7 +83,7 @@ fun String.col(vararg colorNames: String): String {
     return prefix + this + ChatColor.RESET.toString() + ChatColor.WHITE.toString()
 }
 
-fun colorFromName(name: String): ChatColor = ChatColor.valueOf(name.toUpperCase())
+fun colorFromName(name: String): ChatColor = ChatColor.valueOf(name.uppercase())
 
 fun Location.addY(y: Number) = this.clone().add(0, y, 0)
 
