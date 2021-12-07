@@ -1,10 +1,10 @@
 name: Speedrun
-version: 0.0.1
+version: 0.2.0
 main: de.hglabor.speedrun.Speedrun
 api-version: 1.16
 depend: [WorldGeneratorApi]
 
 libraries:
-  - "net.axay:kspigot:1.17.2"
+  - "net.axay:kspigot:1.17.4"
   - "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
-  - "de.hglabor:hglabor-utils:0.0.12"
+  - "de.hglabor:hglabor-utils:0.0.17"
