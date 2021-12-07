@@ -94,7 +94,7 @@ fun Set<Block>.scanFor(material: Material): Set<Block> {
 }
 
 @JvmName("blocksBetweenExtension")
-fun World.blocksBetween(x1: Int, x2: Int, z1: Int, z2: Int, y1: Int = 50, y2: Int = 150) = blocksBetween(this, x1, x2, z1, z2, y1, y2)
+fun World.blocksBetween(x1: Int, x2: Int, z1: Int, z2: Int, y1: Int = 10, y2: Int = 150) = blocksBetween(this, x1, x2, z1, z2, y1, y2)
 
 fun blocksBetween(world: World, x1: Int, x2: Int, z1: Int, z2: Int, y1: Int = 10, y2: Int = 150): Set<Block> {
     val blocks = java.util.HashSet<Block>()
