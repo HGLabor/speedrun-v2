@@ -13,43 +13,45 @@ import org.bukkit.*
 fun commands() {
     // Speedrun
     command("speedrun") {
+        requiresPermission("speedrun.admin")
         literal("next") {
-            simpleExecutes {
+            runs {
                 Bukkit.broadcastMessage("$PREFIX ${ChatColor.YELLOW}Skipping phase")
                 GamePhaseManager.nextPhase()
             }
         }
 
         literal("loadstructures") {
-            simpleExecutes {
-                it.source.player.sendMessage("$PREFIX ${ChatColor.DARK_AQUA}Loading structures...")
+            runs {
+                player.sendMessage("$PREFIX ${ChatColor.DARK_AQUA}Loading structures...")
                 structures()
-                it.source.player.sendMessage("$PREFIX ${ChatColor.DARK_AQUA}Done")
+                player.sendMessage("$PREFIX ${ChatColor.DARK_AQUA}Done")
             }
         }
 
         literal("reload") {
-            simpleExecutes {
+            runs {
                 Config.reload()
-                it.source.player.sendMessage("$PREFIX ${ChatColor.DARK_AQUA}Reloaded config")
+                player.sendMessage("$PREFIX ${ChatColor.DARK_AQUA}Reloaded config")
             }
         }
     }
 
     // Renew
     command("renew") {
-        simpleExecutes {
-            if (GamePhaseManager.currentPhase.onRenew(it.source.player)) {
-                it.source.player.sendMessage("$PREFIX ${ChatColor.GREEN}Renew successful")
-                it.source.player.playSound(Sound.BLOCK_ANVIL_USE)
+        runs {
+            if (GamePhaseManager.currentPhase.onRenew(player)) {
+                player.sendMessage("$PREFIX ${ChatColor.GREEN}Renew successful")
+                player.playSound(Sound.BLOCK_ANVIL_USE)
             }
         }
     }
 
     // Start
     command("start") {
-        simpleExecutes {
-            if (GamePhaseManager.currentPhase.onStart(it.source.player)) grayBroadcast("$PREFIX ${KColors.YELLOW}Force started")
+        requiresPermission("speedrun.start")
+        runs {
+            if (GamePhaseManager.currentPhase.onStart(player)) grayBroadcast("$PREFIX ${KColors.YELLOW}Force started")
         }
     }
 }

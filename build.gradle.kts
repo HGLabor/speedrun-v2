@@ -3,7 +3,7 @@ group = "de.hglabor"
 version = "0.0.1"
 
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.6.0"
 }
 
 repositories {
@@ -28,9 +28,9 @@ dependencies {
     // FAWE
     compileOnly("com.intellectualsites.fawe:FAWE-Bukkit:1.16-637")
     // KSPIGOT
-    implementation("net.axay:kspigot:1.17.2")
+    implementation("net.axay:kspigot:1.17.4")
     // HGLabor Utils
-    implementation("de.hglabor:hglabor-utils:0.0.12")
+    implementation("de.hglabor:hglabor-utils:0.0.17")
     // WorldGeneratorApi
     compileOnly("nl.rutgerkok:worldgeneratorapi:1.2.1")
     // CloudNet
