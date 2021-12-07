@@ -26,15 +26,15 @@ dependencies {
     // PAPER
     compileOnly("io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT")
     // FAWE
-    compileOnly("com.intellectualsites.fawe:FAWE-Bukkit:1.16-637")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:1.17-418")
     // KSPIGOT
     implementation("net.axay:kspigot:1.17.4")
     // HGLabor Utils
     implementation("de.hglabor:hglabor-utils:0.0.17")
     // WorldGeneratorApi
-    compileOnly("nl.rutgerkok:worldgeneratorapi:1.2.1")
+    compileOnly("nl.rutgerkok:worldgeneratorapi:1.3")
     // CloudNet
-    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
+    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.0-RELEASE")
 }
 
 tasks {
