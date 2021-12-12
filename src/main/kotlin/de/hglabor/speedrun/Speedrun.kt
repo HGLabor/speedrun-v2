@@ -9,13 +9,8 @@ import de.hglabor.speedrun.player.PlayerVisibility
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
-import de.hglabor.speedrun.worlds.generator.FlatDiamondGenerator
 import de.hglabor.speedrun.worlds.structures
 import net.axay.kspigot.main.KSpigot
-import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi
-import nl.rutgerkok.worldgeneratorapi.WorldRef
-import nl.rutgerkok.worldgeneratorapi.decoration.DecorationType
-import org.bukkit.generator.ChunkGenerator
 
 val PLUGIN by lazy { Speedrun.INSTANCE }
 
@@ -48,7 +43,7 @@ class Speedrun : KSpigot() {
         GamePhaseManager.start()
     }
 
-    override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator = WorldGeneratorApi
+    /*override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator = WorldGeneratorApi
         .getInstance(this, 0, 6)
         .createCustomGenerator(WorldRef.ofName("stronghold")) {
             it.baseTerrainGenerator = FlatDiamondGenerator()
@@ -57,7 +52,7 @@ class Speedrun : KSpigot() {
             // Enable strongholds again afterwards so only strongholds are enabled
             it.worldDecorator.setDefaultDecoratorsEnabled(DecorationType.STRONGHOLDS, true)
             logger.info("Enabled flat diamond generator for world \"$worldName\".")
-        }
+        }*/
 
     fun updateScoreboards() {
         UserList.players.forEach { it.updateScoreboard() }

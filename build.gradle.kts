@@ -31,8 +31,6 @@ dependencies {
     implementation("net.axay:kspigot:1.17.4")
     // HGLabor Utils
     implementation("de.hglabor:hglabor-utils:0.0.17")
-    // WorldGeneratorApi
-    compileOnly("nl.rutgerkok:worldgeneratorapi:1.3")
     // CloudNet
     compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.0-RELEASE")
 }

@@ -1,8 +1,7 @@
 name: Speedrun
 version: 0.2.0
 main: de.hglabor.speedrun.Speedrun
-api-version: 1.16
-depend: [WorldGeneratorApi]
+api-version: 1.17
 
 libraries:
   - "net.axay:kspigot:1.17.4"
