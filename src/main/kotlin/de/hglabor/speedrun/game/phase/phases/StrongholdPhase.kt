@@ -85,6 +85,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
                 if (player.gameMode == GameMode.SPECTATOR) return
                 clickedBlock!!.apply {
                     val data = (blockData as Openable)
+                    if (data.isOpen) return // Cancel clicks on open iron doors
                     data.isOpen = true
                     blockData = data
                     taskRunLater(20L) {
