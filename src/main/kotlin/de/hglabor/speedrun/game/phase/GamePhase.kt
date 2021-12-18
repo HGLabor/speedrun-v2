@@ -172,7 +172,8 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         // Do everything with the player context
         if (finishedPlayers.contains(uuid)) return
         finishedPlayers.add(uuid)
-        broadcast("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${displayName()}")
+        @Suppress("DEPRECATION")
+        broadcast("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${displayName}")
         playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
         if (startMillis != null) {
             val elapsedTime = (System.currentTimeMillis() - startMillis!!) / 1000F
