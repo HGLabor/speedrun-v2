@@ -1,5 +1,5 @@
 group = "de.hglabor"
-version = "0.2.0"
+version = "0.2.1"
 val kspigot = "1.18.0"
 val kutils = "0.0.2"
 val hglaborUtils = "0.0.17"
