@@ -4,11 +4,13 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.*
+import de.hglabor.speedrun.utils.broadcastLine
 import de.hglabor.speedrun.worlds.Worlds
+import de.hglabor.utils.kutils.*
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
+import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.server
 import net.axay.kspigot.runnables.*
 import net.axay.kspigot.sound.sound
@@ -26,7 +28,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     var time = 0L
     set(value) {
         field = value
-        formattedTime = time.asTime()
+        formattedTime = time.formatAsTime()
     }
     var formattedTime: String = ""
     var roundNumber = 0
@@ -45,7 +47,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
 
         // Display title
         UserList.players.forEach { player ->
-            player.sendTitle(state().name.col("red"), "", 5, 10, 5)
+            player.title(state().name.col("red"), "", 5, 10, 5)
         }
         // Teleport players delayed and set gamemode to survival
         taskRunLater(20L) {
@@ -170,7 +172,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         // Do everything with the player context
         if (finishedPlayers.contains(uuid)) return
         finishedPlayers.add(uuid)
-        Bukkit.broadcastMessage("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${displayName}")
+        broadcast("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${displayName()}")
         playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
         if (startMillis != null) {
             val elapsedTime = (System.currentTimeMillis() - startMillis!!) / 1000F

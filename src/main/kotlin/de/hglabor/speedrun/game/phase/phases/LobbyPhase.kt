@@ -8,9 +8,9 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.cloudNet
-import de.hglabor.speedrun.utils.grayBroadcast
+import de.hglabor.utils.kutils.cloudNet
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
 import org.bukkit.ChatColor
@@ -32,14 +32,14 @@ class LobbyPhase : GamePhase(0, -1, -1) {
         field = value
         when(value) {
             -1 -> {
-                grayBroadcast("$PREFIX ${KColors.ORANGERED}Not enough players (${UserList.size}). Start cancelled")
+                broadcast("$PREFIX ${KColors.ORANGERED}Not enough players (${UserList.size}). Start cancelled")
                 task?.cancel()
             }
             120, 90, 60, 30, 20 -> announceTime()
             10 -> {
                 announceTime()
                 cloudNet {
-                    BukkitCloudNetHelper.setApiMotd("Starting...")
+                    BukkitCloudNetHelper.setMotd("Starting...")
                     BukkitCloudNetHelper.setState("STARTING")
                 }
             }
@@ -51,8 +51,8 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     private val hasStarted get() = startingIn != -1
 
     private fun announceTime() {
-        if (startingIn != 0) grayBroadcast("$PREFIX ${KColors.GREENYELLOW}Starting in ${KColors.GREEN}$startingIn ${KColors.GREENYELLOW} seconds.")
-        else grayBroadcast("$PREFIX ${KColors.GREEN}Starting...")
+        if (startingIn != 0) broadcast("$PREFIX ${KColors.GREENYELLOW}Starting in ${KColors.GREEN}$startingIn ${KColors.GREENYELLOW} seconds.")
+        else broadcast("$PREFIX ${KColors.GREEN}Starting...")
     }
 
     override fun state() = GameState.Lobby
@@ -106,7 +106,7 @@ class LobbyPhase : GamePhase(0, -1, -1) {
         if (hasStarted && UserList.size < Config.MIN_PLAYERS.getInt()) {
             if (startingIn <= 10) {
                 cloudNet {
-                    BukkitCloudNetHelper.setApiMotd("Waiting for players...")
+                    BukkitCloudNetHelper.setMotd("Waiting for players...")
                     BukkitCloudNetHelper.setState("LOBBY")
                 }
             }

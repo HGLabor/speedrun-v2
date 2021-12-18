@@ -10,7 +10,7 @@ import com.sk89q.worldedit.session.ClipboardHolder
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
-import de.hglabor.speedrun.utils.addY
+import de.hglabor.utils.kutils.addY
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.extensions.geometry.subtract
 import org.bukkit.Location

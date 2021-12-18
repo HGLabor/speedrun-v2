@@ -1,7 +1,7 @@
 package de.hglabor.speedrun.game.phase.phases.crafting
 
 import de.hglabor.speedrun.config.Config
-import de.hglabor.speedrun.utils.*
+import de.hglabor.utils.kutils.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.*

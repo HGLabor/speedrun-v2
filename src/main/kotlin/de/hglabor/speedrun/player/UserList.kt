@@ -1,6 +1,6 @@
 package de.hglabor.speedrun.player
 
-import de.hglabor.speedrun.utils.closeAndClearInv
+import de.hglabor.utils.kutils.closeAndClearInv
 import net.axay.kspigot.event.listen
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

@@ -6,8 +6,8 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.*
 import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
+import de.hglabor.utils.kutils.*
 import de.hglabor.utils.noriskutils.ItemBuilder
 import de.hglabor.utils.noriskutils.SoundUtils
 import net.axay.kspigot.extensions.bukkit.actionBar

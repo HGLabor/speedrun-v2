@@ -2,9 +2,8 @@ package de.hglabor.speedrun.worlds
 
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
-import de.hglabor.speedrun.utils.speedrunGameRules
+import org.apache.commons.io.FileUtils
 import org.bukkit.*
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils
 import java.io.File
 
 object Worlds : HashMap<String, World>() {
@@ -15,7 +14,9 @@ object Worlds : HashMap<String, World>() {
             when(it.name.lowercase()) {
                 "crystal" -> creator.environment(World.Environment.THE_END)
             }
-            val world = Bukkit.createWorld(creator)!!.speedrunGameRules()
+            val world = Bukkit.createWorld(creator)!!.apply {
+                if (name.equals("crystal", true)) setSpawnLocation(0, 70, 0)
+            }
             this[world.name] = world
         }
     }

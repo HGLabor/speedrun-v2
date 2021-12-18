@@ -1,6 +1,6 @@
 package de.hglabor.speedrun.player
 
-import de.hglabor.speedrun.utils.cancel
+import de.hglabor.utils.kutils.cancel
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.hideOnlinePlayers

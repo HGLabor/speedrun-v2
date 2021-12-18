@@ -3,12 +3,14 @@ package de.hglabor.speedrun.command
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.phase.GamePhaseManager
-import de.hglabor.speedrun.utils.grayBroadcast
-import de.hglabor.speedrun.utils.playSound
 import de.hglabor.speedrun.worlds.structures
+import de.hglabor.utils.kutils.grayBroadcast
+import de.hglabor.utils.kutils.playSound
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.commands.*
-import org.bukkit.*
+import net.axay.kspigot.extensions.broadcast
+import org.bukkit.ChatColor
+import org.bukkit.Sound
 
 fun commands() {
     // Speedrun
@@ -16,7 +18,7 @@ fun commands() {
         requiresPermission("speedrun.admin")
         literal("next") {
             runs {
-                Bukkit.broadcastMessage("$PREFIX ${ChatColor.YELLOW}Skipping phase")
+                broadcast("$PREFIX ${ChatColor.YELLOW}Skipping phase")
                 GamePhaseManager.nextPhase()
             }
         }

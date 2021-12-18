@@ -6,7 +6,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.utils.col
+import de.hglabor.utils.kutils.col
 import de.hglabor.utils.noriskutils.scoreboard.ScoreboardFactory
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor

@@ -1,8 +1,8 @@
 package de.hglabor.speedrun.listener
 
 import de.hglabor.speedrun.game.phase.GamePhaseManager
-import de.hglabor.speedrun.utils.cancel
-import de.hglabor.speedrun.utils.isCreative
+import de.hglabor.utils.kutils.cancel
+import de.hglabor.utils.kutils.isCreative
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.feed
 import org.bukkit.entity.*
