@@ -9,6 +9,7 @@ import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.broadcastLine
 import de.hglabor.utils.kutils.*
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
@@ -67,7 +68,8 @@ class WinPhase : GamePhase(0, -1, -1) {
     override fun startPreparationPhase() {}
     override fun startIngamePhase() {}
     override fun getScoreboardHeading(): String = "Winner:"
-    override fun getScoreboardContent(): String = ChatColor.AQUA.toString() + winners[0].player.displayName()
+    @Suppress("DEPRECATION")
+    override fun getScoreboardContent(): String = "${KColors.AQUA}${winners[0].player.displayName}"
 
     override fun state() = GameState.Win
 
