@@ -13,7 +13,6 @@ import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.server
 import net.axay.kspigot.runnables.*
-import net.axay.kspigot.sound.sound
 import org.bukkit.*
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -52,28 +51,21 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         // Teleport players delayed and set gamemode to survival
         taskRunLater(20L) {
             UserList.players.forEach { player ->
-                sound(Sound.ENTITY_SHULKER_TELEPORT) {
-                    playFor(player)
-                }
+                player.playSound(Sound.ENTITY_SHULKER_TELEPORT)
                 player.survival()
             }
-            if (roundDuration != -1) {
-                startRoundTask()
-            }
+            if (roundDuration != -1) startRoundTask()
         }
     }
 
-    protected fun Player.tpSpawn() {
-        this.teleport(this@GamePhase.spawn)
-    }
-
+    protected fun Player.tpSpawn() = this.teleport(this@GamePhase.spawn)
     open fun tpPlayers() = UserList.players.forEach { it.tpSpawn() }
 
     open fun buildingAllowed() = false
 
     open fun onRenew(player: Player): Boolean = false
     open fun onStart(player: Player): Boolean = false
-    open fun onFall(player: Player) = player.tpSpawn()
+    open fun onFall(player: Player) { player.tpSpawn() }
 
     private fun isFinished() = rounds != -1 && roundNumber >= rounds
 
@@ -104,7 +96,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                 startDuration -> {
                     broadcastLine()
                     grayBroadcast("$PREFIX Round ${roundNumber.toString().col("bold", "aqua")}")
-                    UserList.players.forEach { player -> player.playSound(player.location, Sound.ENTITY_EVOKER_CAST_SPELL, 1F, 0F) }
+                    UserList.players.forEach { player -> player.playSound(Sound.ENTITY_EVOKER_CAST_SPELL, pitch = 0) }
                     UserList.clearAndCloseAllInvs()
                     activePhase = Phase.PREPARATION
                     startPreparationPhase()
@@ -114,7 +106,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
                 }
                 ingameStart -> {
                     UserList.clearAndCloseAllInvs()
-                    UserList.players.forEach { player -> player.playSound(player.location, Sound.BLOCK_BEEHIVE_ENTER, 1F, 0F) }
+                    UserList.players.forEach { player -> player.playSound(Sound.BLOCK_BEEHIVE_ENTER, pitch = 0) }
                     activePhase = Phase.INGAME
                     startIngamePhase()
                     startMillis = System.currentTimeMillis()
@@ -168,13 +160,13 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     }
 
     /** Get's called by subclass when a player has finished */
-    fun finish(uuid: UUID) = with(Bukkit.getPlayer(uuid)!!) {
+    fun finish(uuid: UUID) = with(player(uuid)!!) {
         // Do everything with the player context
         if (finishedPlayers.contains(uuid)) return
         finishedPlayers.add(uuid)
         @Suppress("DEPRECATION")
         broadcast("$PREFIX ${ChatColor.GOLD}${finishedPlayers.size}. ${ChatColor.AQUA}${displayName}")
-        playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1F, 0F)
+        playSound(Sound.ENTITY_PLAYER_LEVELUP, pitch = 0)
         if (startMillis != null) {
             val elapsedTime = (System.currentTimeMillis() - startMillis!!) / 1000F
             actionBar("§6Time needed: §e" + elapsedTime + "s")

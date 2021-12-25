@@ -1,8 +1,11 @@
 package de.hglabor.speedrun.game.phase.phases
 
+import com.mongodb.client.model.Filters
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
+import de.hglabor.speedrun.database.SpeedrunDB
+import de.hglabor.speedrun.database.data.SpeedrunRecord
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.player.SpeedRunner
@@ -11,9 +14,9 @@ import de.hglabor.speedrun.utils.broadcastLine
 import de.hglabor.utils.kutils.*
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
-import net.axay.kspigot.runnables.KSpigotRunnable
-import net.axay.kspigot.runnables.task
+import net.axay.kspigot.runnables.*
 import org.bukkit.ChatColor
+import org.litote.kmongo.findOne
 
 
 class WinPhase : GamePhase(0, -1, -1) {
@@ -21,6 +24,17 @@ class WinPhase : GamePhase(0, -1, -1) {
     private var winTask: KSpigotRunnable? = null
 
     init {
+        // Save record to database
+        val winner = winners[0]
+        async {
+            val record = SpeedrunDB.recordsCollection.findOne()
+            if (record == null || record.time > winner.timeNeededTotal) {
+                SpeedrunDB.recordsCollection.deleteMany(Filters.empty())
+                winner.player.sendMessage("$PREFIX ${KColors.GREEN}You set a new record! (Old record: ${record?.time?.toString() ?: "No record available"}")
+                SpeedrunDB.recordsCollection.insertOne(SpeedrunRecord(winner.player.name, winner.timeNeededTotal))
+            }
+        }
+
         tpPlayers()
         UserList.players.forEach { it.survival() }
 

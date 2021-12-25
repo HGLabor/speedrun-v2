@@ -1,14 +1,16 @@
 package de.hglabor.speedrun.game.phase.phases
 
-import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
+import de.hglabor.speedrun.database.SpeedrunDB
+import de.hglabor.speedrun.database.data.locations
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.utils.kutils.cloudNet
+import de.hglabor.utils.kutils.Hologram
+import de.hglabor.utils.kutils.hologram
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
@@ -18,8 +20,23 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.litote.kmongo.findOne
 
 class LobbyPhase : GamePhase(0, -1, -1) {
+    init {
+        updateHolograms()
+    }
+    var lifetimeRecordHologram: Hologram? = null
+    fun updateHolograms() {
+        lifetimeRecordHologram?.remove()
+        val record = SpeedrunDB.recordsCollection.findOne()
+        val location = locations.lifetimeRecordLocation
+        lifetimeRecordHologram = if (record != null) hologram(location,
+            "${KColors.GOLDENROD}Lifetime Record: ${KColors.SILVER}${record.time}s ${KColors.GOLDENROD}by ${KColors.SILVER}${record.name}")
+        else hologram(location,
+            "${KColors.GOLDENROD}Lifetime Record: Not available")
+    }
+
     override fun startPreparationPhase() {}
     override fun startIngamePhase() {}
     override fun getScoreboardHeading(): String = "Leave"
@@ -38,10 +55,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
             120, 90, 60, 30, 20 -> announceTime()
             10 -> {
                 announceTime()
-                cloudNet {
-                    BukkitCloudNetHelper.setMotd("Starting...")
-                    BukkitCloudNetHelper.setState("STARTING")
-                }
+                /*cloudNet {
+                    motd("Starting...")
+                    state("STARTING")
+                }*/ //TODO undo
             }
 
         }
@@ -59,9 +76,9 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun stop() {
         super.stop()
         task?.cancel()
-        cloudNet {
-            BukkitCloudNetHelper.changeToIngame()
-        }
+        /*cloudNet {
+            ingame()
+        }*/ //TODO undo
     }
 
     override fun onStart(player: Player): Boolean {
@@ -105,10 +122,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     fun onPlayerQuit(event: PlayerQuitEvent) {
         if (hasStarted && UserList.size < Config.MIN_PLAYERS.getInt()) {
             if (startingIn <= 10) {
-                cloudNet {
-                    BukkitCloudNetHelper.setMotd("Waiting for players...")
-                    BukkitCloudNetHelper.setState("LOBBY")
-                }
+                /*cloudNet {
+                    motd("Waiting for players...")
+                    state("LOBBY")
+                }*/ //TODO undo
             }
             startingIn = -1
         }

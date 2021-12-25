@@ -2,6 +2,7 @@ package de.hglabor.speedrun
 
 import de.hglabor.speedrun.command.commands
 import de.hglabor.speedrun.config.Config
+import de.hglabor.speedrun.database.SpeedrunDB
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.game.phase.phases.crafting.CraftingUtils
 import de.hglabor.speedrun.listener.*
@@ -21,11 +22,17 @@ class Speedrun : KSpigot() {
 
     override fun load() {
         INSTANCE = this
+        System.setProperty(
+            "org.litote.mongo.test.mapping.service",
+            "org.litote.kmongo.serialization.SerializationClassMappingTypeService"
+        )
     }
 
     override fun startup() {
         Config.load()
         UserList.init()
+        Worlds.createWorlds()
+        SpeedrunDB.enable()
 
         mainListener()
         lobbyListener()
@@ -37,7 +44,6 @@ class Speedrun : KSpigot() {
         PlayerVisibility
         CraftingUtils
 
-        Worlds.createWorlds()
         structures()
 
         GamePhaseManager.start()
@@ -58,7 +64,9 @@ class Speedrun : KSpigot() {
         UserList.players.forEach { it.updateScoreboard() }
     }
 
-    override fun shutdown() {}
+    override fun shutdown() {
+        SpeedrunDB.disable()
+    }
 }
 
 

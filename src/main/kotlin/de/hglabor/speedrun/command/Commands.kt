@@ -2,7 +2,10 @@ package de.hglabor.speedrun.command
 
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
+import de.hglabor.speedrun.database.SpeedrunDB
+import de.hglabor.speedrun.database.data.locations
 import de.hglabor.speedrun.game.phase.GamePhaseManager
+import de.hglabor.speedrun.game.phase.phases.LobbyPhase
 import de.hglabor.speedrun.worlds.structures
 import de.hglabor.utils.kutils.grayBroadcast
 import de.hglabor.utils.kutils.playSound
@@ -20,6 +23,20 @@ fun commands() {
             runs {
                 broadcast("$PREFIX ${ChatColor.YELLOW}Skipping phase")
                 GamePhaseManager.nextPhase()
+            }
+        }
+        literal("resetdb") {
+            runs {
+                SpeedrunDB.recordsCollection.drop()
+            }
+        }
+        literal("location") {
+            literal("lifetimerecordhologram") {
+                runs {
+                    locations.lifetimeRecordLocation = player.location
+                    if (GamePhaseManager.currentPhase is LobbyPhase) (GamePhaseManager.currentPhase as LobbyPhase).updateHolograms()
+                    player.sendMessage("$PREFIX ${KColors.GREEN}Updated hologram location")
+                }
             }
         }
 

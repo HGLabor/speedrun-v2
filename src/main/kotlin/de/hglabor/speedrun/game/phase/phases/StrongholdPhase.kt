@@ -5,8 +5,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.utils.kutils.cancel
-import de.hglabor.utils.kutils.closeAndClearInv
+import de.hglabor.utils.kutils.*
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.*
@@ -91,9 +90,9 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
                     taskRunLater(20L) {
                         data.isOpen = false
                         blockData = data
-                        player.playSound(location, Sound.BLOCK_IRON_DOOR_OPEN, 1F, 1F)
+                        player.playSound(Sound.BLOCK_IRON_DOOR_OPEN)
                     }
-                    player.playSound(location, Sound.BLOCK_IRON_DOOR_CLOSE, 1F, 1F)
+                    player.playSound(Sound.BLOCK_IRON_DOOR_CLOSE)
                 }
             }
     }
