@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.game.phase.phases
 
+import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
@@ -9,8 +10,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.utils.kutils.Hologram
-import de.hglabor.utils.kutils.hologram
+import de.hglabor.utils.kutils.*
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
@@ -55,10 +55,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
             120, 90, 60, 30, 20 -> announceTime()
             10 -> {
                 announceTime()
-                /*cloudNet {
-                    motd("Starting...")
-                    state("STARTING")
-                }*/ //TODO undo
+                cloudNet {
+                    BukkitCloudNetHelper.setMotd("Starting...")
+                    BukkitCloudNetHelper.setState("STARTING")
+                }
             }
 
         }
@@ -76,9 +76,9 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun stop() {
         super.stop()
         task?.cancel()
-        /*cloudNet {
-            ingame()
-        }*/ //TODO undo
+        cloudNet {
+            BukkitCloudNetHelper.changeToIngame()
+        }
     }
 
     override fun onStart(player: Player): Boolean {
@@ -122,10 +122,10 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     fun onPlayerQuit(event: PlayerQuitEvent) {
         if (hasStarted && UserList.size < Config.MIN_PLAYERS.getInt()) {
             if (startingIn <= 10) {
-                /*cloudNet {
-                    motd("Waiting for players...")
-                    state("LOBBY")
-                }*/ //TODO undo
+                cloudNet {
+                    BukkitCloudNetHelper.setMotd("Waiting for players...")
+                    BukkitCloudNetHelper.setState("LOBBY")
+                }
             }
             startingIn = -1
         }
