@@ -2,6 +2,7 @@ package de.hglabor.speedrun.worlds
 
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
+import de.hglabor.utils.kutils.trainingGameRules
 import org.apache.commons.io.FileUtils
 import org.bukkit.*
 import java.io.File
@@ -16,6 +17,7 @@ object Worlds : HashMap<String, World>() {
             }
             val world = Bukkit.createWorld(creator)!!.apply {
                 if (name.equals("crystal", true)) setSpawnLocation(0, 70, 0)
+                trainingGameRules()
             }
             this[world.name] = world
         }
