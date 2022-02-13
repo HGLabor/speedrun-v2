@@ -26,6 +26,10 @@ enum class Config(private val path: String, value: Any) {
     PORTAL_INGAME_TIME("portalIngame", 60),
     PORTAL_SCHEMATIC("portalSchem", "lavaArena_03"),
 
+    // Blazes
+    BLAZES_INGAME_TIME("blazesIngame", 60),
+    BLAZES_SCHEMATIC("blazesSchem", "blazeSpawner_01"),
+
     // Stronghold
     STRONGHOLD_INGAME_TIME("strongholdIngame", 60),
 

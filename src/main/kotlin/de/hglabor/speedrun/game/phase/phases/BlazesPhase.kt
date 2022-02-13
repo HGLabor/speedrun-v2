@@ -5,20 +5,17 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.player.closeAndClearInvExceptVisibility
 import de.hglabor.speedrun.worlds.*
-import de.hglabor.utils.kutils.addAll
-import de.hglabor.utils.kutils.stack
+import de.hglabor.utils.kutils.*
 import de.hglabor.utils.noriskutils.SoundUtils
 import org.bukkit.*
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.world.PortalCreateEvent
-import org.bukkit.inventory.ItemStack
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.util.*
 
-class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PORTAL_INGAME_TIME.getInt()) {
-    private val items: List<Material> = listOf(Material.DIAMOND_PICKAXE, Material.WATER_BUCKET, Material.BUCKET, Material.FLINT_AND_STEEL)
+class BlazesPhase : GamePhase(preparationDuration = 1, roundDuration = Config.BLAZES_INGAME_TIME.getInt()) {
     private var spawns: HashMap<UUID, Location> = HashMap()
 
     override fun startPreparationPhase() {}
@@ -30,16 +27,16 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {
-        player.inventory.addAll(items.stack() + ItemStack(Material.OAK_LEAVES, 64))
+        player.closeAndClearInv()
+        player.inventory.addAll(listOf(Material.IRON_SWORD.stack(), Material.BOW.stack().apply { addEnchantment(Enchantment.ARROW_INFINITE, 0) }, Material.ARROW.stack()))
     }
 
     override fun onRenew(player: Player): Boolean {
         // When portal spawns are non-null, the clipboard is probably non-null too
         if (!ingameNotFinished(player)) return false
         spawns[player.uniqueId]?.let {
-            pasteClipboard(it, portalClipboard()!!)
+            pasteClipboard(it, blazesClipboard()!!)
             player.teleport(it)
-            player.closeAndClearInvExceptVisibility()
             items(player)
             SoundUtils.playTeleportSound(player)
             return true
@@ -54,12 +51,12 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
     override fun buildingAllowed(): Boolean = true
 
     @EventHandler
-    fun onPortal(event: PortalCreateEvent) = with(event) {
-        if (GamePhaseManager.currentState == GameState.Portal && entity != null) finish(entity!!.uniqueId)
+    fun onEntityDamage(event: EntityDamageByEntityEvent) = with(event) {
+        if (GamePhaseManager.currentState == GameState.Blazes) damager.sendMessage("you hit blaze :)")
     }
 
     override fun tpPlayers() {
-        val shuffled = PORTAL_SPAWNS_LIST.shuffled()
+        val shuffled = BLAZES_SPAWNS_LIST.shuffled()
         UserList.players.forEachIndexed { index, player ->
             spawns[player.uniqueId] = shuffled[index]
             val loc = spawns[player.uniqueId] ?: return

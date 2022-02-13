@@ -11,6 +11,7 @@ import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.utils.kutils.addY
+import de.hglabor.utils.kutils.maxPlayers
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.extensions.geometry.subtract
 import org.bukkit.Location
@@ -23,13 +24,16 @@ import kotlin.math.sin
 
 var CRAFTING_SPAWNS: MutableList<Location>? = null; private set
 var PORTAL_SPAWNS_LIST = ArrayList<Location>()
+var BLAZES_SPAWNS_LIST = ArrayList<Location>()
 val LAVA_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/${Config.PORTAL_SCHEMATIC.getString()}.schem")
+val BLAZES_ARENA_FILE = File(PLUGIN.dataFolder.absolutePath + "/${Config.BLAZES_SCHEMATIC.getString()}.schem")
 const val LAVA_ARENA_WIDTH = 20
-const val ARENA_COUNT = 30
+const val BLAZES_ARENA_WIDTH = 15
 
 fun structures() {
     craftingStructures()
     portalStructures()
+    //blazesStructures()
 }
 
 // Crafting
@@ -61,19 +65,34 @@ fun getCircle(center: Location, radius: Double, amount: Int): MutableList<Locati
 fun portalStructures() = with(GameState.Portal.world) {
     loadChunk(0, 0)
     val startLocation = Location(this, 0.0, 20.0, 0.0)
-    val clipboard = getPortalClipboard()
-    pastePortals(startLocation, clipboard ?: return)
+    pastePortals(startLocation, portalClipboard() ?: return)
 }
 
 fun pastePortals(location: Location, clipboard: Clipboard) {
-    for (i in 0..ARENA_COUNT) {
+    for (i in 0..maxPlayers) {
         val newLoc = location.clone().add((LAVA_ARENA_WIDTH+5)*i, 0, 0)
-        pastePortal(newLoc, clipboard)
+        pasteClipboard(newLoc, clipboard)
         PORTAL_SPAWNS_LIST.add(newLoc)
     }
 }
 
-fun pastePortal(location: Location, clipboard: Clipboard) {
+// Blazes
+
+/*fun blazesStructures() = with(GameState.Blazes.world) {
+    loadChunk(0, 0)
+    val startLocation = Location(this, 0.0, 20.0, 0.0)
+    pasteSpawners(startLocation, blazesClipboard() ?: return)
+}*/
+
+fun pasteSpawners(location: Location, clipboard: Clipboard) {
+    for (i in 0..maxPlayers) {
+        val newLoc = location.clone().add((BLAZES_ARENA_WIDTH+5)*i, 0, 0)
+        pasteClipboard(newLoc, clipboard)
+        BLAZES_SPAWNS_LIST.add(newLoc)
+    }
+}
+
+fun pasteClipboard(location: Location, clipboard: Clipboard) {
     val world = BukkitAdapter.adapt(location.world)
     @Suppress("DEPRECATION") val editSession = WorldEdit.getInstance().editSessionFactory.getEditSession(world, -1)
     val operation = ClipboardHolder(clipboard)
@@ -85,9 +104,12 @@ fun pastePortal(location: Location, clipboard: Clipboard) {
     editSession.close()
 }
 
-fun getPortalClipboard(): Clipboard? {
+fun portalClipboard(): Clipboard? {
     val format = ClipboardFormats.findByFile(LAVA_ARENA_FILE)
     return format?.getReader(FileInputStream(LAVA_ARENA_FILE))?.read()
 }
 
-fun requirePortalClipboard(): Clipboard = getPortalClipboard()!!
+fun blazesClipboard(): Clipboard? {
+    val format = ClipboardFormats.findByFile(BLAZES_ARENA_FILE)
+    return format?.getReader(FileInputStream(BLAZES_ARENA_FILE))?.read()
+}
