@@ -10,8 +10,7 @@ import com.sk89q.worldedit.session.ClipboardHolder
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
-import de.hglabor.utils.kutils.addY
-import de.hglabor.utils.kutils.maxPlayers
+import de.hglabor.utils.kutils.*
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.extensions.geometry.subtract
 import org.bukkit.Location
@@ -33,7 +32,7 @@ const val BLAZES_ARENA_WIDTH = 15
 fun structures() {
     craftingStructures()
     portalStructures()
-    //blazesStructures()
+    blazesStructures()
 }
 
 // Crafting
@@ -78,11 +77,11 @@ fun pastePortals(location: Location, clipboard: Clipboard) {
 
 // Blazes
 
-/*fun blazesStructures() = with(GameState.Blazes.world) {
+fun blazesStructures() = with(GameState.Blazes.world) {
     loadChunk(0, 0)
     val startLocation = Location(this, 0.0, 20.0, 0.0)
     pasteSpawners(startLocation, blazesClipboard() ?: return)
-}*/
+}
 
 fun pasteSpawners(location: Location, clipboard: Clipboard) {
     for (i in 0..maxPlayers) {
@@ -106,10 +105,10 @@ fun pasteClipboard(location: Location, clipboard: Clipboard) {
 
 fun portalClipboard(): Clipboard? {
     val format = ClipboardFormats.findByFile(LAVA_ARENA_FILE)
-    return format?.getReader(FileInputStream(LAVA_ARENA_FILE))?.read()
+    return format?.getReader(FileInputStream(LAVA_ARENA_FILE))?.read() ?: run { logger.warning("NO PORTAL CLIPBOARD"); null }
 }
 
 fun blazesClipboard(): Clipboard? {
     val format = ClipboardFormats.findByFile(BLAZES_ARENA_FILE)
-    return format?.getReader(FileInputStream(BLAZES_ARENA_FILE))?.read()
+    return format?.getReader(FileInputStream(BLAZES_ARENA_FILE))?.read() ?: run { logger.warning("NO BLAZES CLIPBOARD"); null }
 }

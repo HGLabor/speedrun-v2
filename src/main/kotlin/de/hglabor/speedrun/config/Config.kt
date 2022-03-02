@@ -28,7 +28,10 @@ enum class Config(private val path: String, value: Any) {
 
     // Blazes
     BLAZES_INGAME_TIME("blazesIngame", 60),
-    BLAZES_SCHEMATIC("blazesSchem", "blazeSpawner_01"),
+    BLAZES_SCHEMATIC("blazesSchem", "blazeSpawner_02"),
+    BLAZES_SPAWNER_OFFSET("blazesSchemSpawnerOffset", listOf(0, 4, -10)), // x, y, z offset from spawn location to spawner location
+    BLAZES_MIN_SPAWN("blazesMinSpawn", 1),
+    BLAZES_MAX_SPAWN("blazesMaxSpawn", 3),
 
     // Stronghold
     STRONGHOLD_INGAME_TIME("strongholdIngame", 60),
@@ -65,4 +68,5 @@ enum class Config(private val path: String, value: Any) {
     fun getBoolean(): Boolean = this.configValue as Boolean
     fun getString(): String = this.configValue as String
     @Suppress("UNCHECKED_CAST") fun getStringList(): ArrayList<String> = this.configValue as ArrayList<String>? ?: ArrayList()
+    @Suppress("UNCHECKED_CAST") fun getIntList(): ArrayList<Int> = this.configValue as ArrayList<Int>? ?: ArrayList()
 }
