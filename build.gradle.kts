@@ -1,7 +1,7 @@
 group = "de.hglabor"
 version = "0.2.2"
 val kspigot = "1.18.0"
-val kutils = "0.0.7"
+val kutils = "0.0.18"
 val hglaborUtils = "0.0.17"
 val kotlinxSerializationJson = "1.3.1"
 val kmongo = "4.3.0"
@@ -33,6 +33,7 @@ bukkit {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://repo.cloudnetservice.eu/repository/releases/") // CloudNet
     maven("https://maven.enginehub.org/repo/")

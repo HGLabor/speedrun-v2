@@ -1,4 +1,4 @@
-package de.hglabor.speedrun.game.phase.phases.crafting
+package de.hglabor.speedrun.game.phase.phases
 
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
@@ -22,11 +22,13 @@ import org.bukkit.inventory.ItemStack
 
 
 class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING_PREP_TIME.getInt(), Config.CRAFTING_INGAME_TIME.getInt()) {
+    private val craftingUtils = CraftingUtils()
     private val items = ArrayList<Material>()
     private var itemToCraft: ItemStack? = null
 
     private fun newRandomItem(): Material  {
-        val item = CraftingUtils.randomItem()
+        val item = craftingUtils.randomItem()
+        // Prevent getting the same item multiple times
         return if (item !in items) item.apply { items += this }
         else newRandomItem()
     }
@@ -47,7 +49,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     private fun items(player: Player) {
         player.clearInv()
-        CraftingUtils.getCraftingItems(itemToCraft!!.type).addToInv(player)
+        itemToCraft?.ingredients?.addToInv(player)
     }
 
     override fun onRenew(player: Player): Boolean {

@@ -4,7 +4,6 @@ import de.hglabor.speedrun.command.commands
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.database.SpeedrunDB
 import de.hglabor.speedrun.game.phase.GamePhaseManager
-import de.hglabor.speedrun.game.phase.phases.crafting.CraftingUtils
 import de.hglabor.speedrun.listener.*
 import de.hglabor.speedrun.player.PlayerVisibility
 import de.hglabor.speedrun.player.UserList
@@ -12,6 +11,7 @@ import de.hglabor.speedrun.utils.updateScoreboard
 import de.hglabor.speedrun.worlds.Worlds
 import de.hglabor.speedrun.worlds.generator.StrongholdGenerator
 import de.hglabor.speedrun.worlds.structures
+import de.hglabor.utils.kutils.CraftingUtils
 import net.axay.kspigot.main.KSpigot
 
 val PLUGIN by lazy { Speedrun.INSTANCE }
