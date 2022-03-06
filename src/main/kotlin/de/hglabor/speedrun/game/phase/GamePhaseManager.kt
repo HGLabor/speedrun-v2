@@ -3,7 +3,6 @@ package de.hglabor.speedrun.game.phase
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.phases.*
-import de.hglabor.speedrun.game.phase.phases.crafting.CraftingPhase
 import de.hglabor.speedrun.player.UserList
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
