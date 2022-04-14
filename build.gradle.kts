@@ -35,7 +35,7 @@ bukkit {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://repo.cloudnetservice.eu/repository/releases/") // CloudNet
+    maven("https://repo.cloudnetservice.eu/repository/snapshots/") // CloudNet
     maven("https://maven.enginehub.org/repo/")
 }
 
@@ -47,7 +47,8 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJson")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.8")
-    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.0-RELEASE")
+    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.0-SNAPSHOT")
+    compileOnly("de.dytanic.cloudnet", "cloudnet-wrapper-jvm", "3.4.0-SNAPSHOT")
 
     implementation("org.litote.kmongo:kmongo:$kmongo")
     implementation("org.litote.kmongo:kmongo-serialization-mapping:$kmongo")

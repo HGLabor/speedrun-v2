@@ -13,6 +13,7 @@ import de.hglabor.speedrun.worlds.generator.StrongholdGenerator
 import de.hglabor.speedrun.worlds.structures
 import de.hglabor.utils.kutils.CraftingUtils
 import net.axay.kspigot.main.KSpigot
+import org.bukkit.Bukkit
 
 val PLUGIN by lazy { Speedrun.INSTANCE }
 
@@ -30,6 +31,8 @@ class Speedrun : KSpigot() {
     }
 
     override fun startup() {
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord")
+
         Config.load()
         Worlds.createWorlds()
         SpeedrunDB.enable()
