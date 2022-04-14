@@ -73,7 +73,6 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {
-        player.closeAndClearInv()
         player.addToInv(listOf(bow, Material.ARROW.stack()))
     }
 

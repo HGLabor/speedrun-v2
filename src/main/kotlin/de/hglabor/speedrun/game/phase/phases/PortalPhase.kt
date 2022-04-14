@@ -6,7 +6,8 @@ import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.worlds.*
-import de.hglabor.utils.kutils.*
+import de.hglabor.utils.kutils.addAll
+import de.hglabor.utils.kutils.stack
 import de.hglabor.utils.noriskutils.SoundUtils
 import org.bukkit.*
 import org.bukkit.entity.Player
@@ -28,7 +29,6 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {
-        player.closeAndClearInv()
         player.inventory.addAll(items.stack() + ItemStack(Material.OAK_LEAVES, 64))
     }
 

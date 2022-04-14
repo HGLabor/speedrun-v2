@@ -5,7 +5,8 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
-import de.hglabor.utils.kutils.*
+import de.hglabor.utils.kutils.cancel
+import de.hglabor.utils.kutils.playSound
 import net.axay.kspigot.extensions.geometry.add
 import net.axay.kspigot.runnables.taskRunLater
 import org.bukkit.*
@@ -32,7 +33,6 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
 
     private fun items() { UserList.players.forEach { items(it) } }
     private fun items(player: Player) {
-        player.closeAndClearInv()
         player.inventory.addItem(ItemStack(Material.ENDER_EYE, 64))
     }
 

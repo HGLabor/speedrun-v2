@@ -48,7 +48,6 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
     override fun startIngamePhase() { UserList.players.forEach { items(it) } }
 
     private fun items(player: Player) {
-        player.clearInv()
         itemToCraft?.ingredients?.addToInv(player)
     }
 

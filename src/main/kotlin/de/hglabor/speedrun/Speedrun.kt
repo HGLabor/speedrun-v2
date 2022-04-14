@@ -31,9 +31,10 @@ class Speedrun : KSpigot() {
 
     override fun startup() {
         Config.load()
-        UserList.init()
         Worlds.createWorlds()
         SpeedrunDB.enable()
+
+        UserList.init()
 
         mainListener()
         lobbyListener()

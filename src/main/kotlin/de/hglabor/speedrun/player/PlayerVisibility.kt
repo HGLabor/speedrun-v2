@@ -1,5 +1,6 @@
 package de.hglabor.speedrun.player
 
+import de.hglabor.speedrun.PLUGIN
 import de.hglabor.utils.kutils.cancel
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
@@ -26,28 +27,31 @@ object PlayerVisibility {
         val hidden =  "$players ${KColors.ORANGE}HIDDEN"
     }
 
-    private val ITEM: ItemStack = itemStack(Material.SOUL_TORCH) {
+    val ITEM: ItemStack = itemStack(Material.SOUL_TORCH) {
         meta { name = Text.visible}
     }
 
     init {
         listen<PlayerJoinEvent> {
             it.player.inventory.setItem(SLOT, ITEM)
+
+            UserList.players.filter { p -> p.uniqueId != it.player.uniqueId }.forEach { p ->
+                if (p.inventory.getItem(SLOT)?.visible == false) p.hidePlayer(PLUGIN, it.player)
+            }
         }
 
         listen<InventoryClickEvent> { with(it) {
             if (whoClicked !is Player || !currentItem.isToggleItem()) return@listen
 
             cancel()
-            currentItem.toggle()
+            currentItem!!.toggle()
             if (currentItem!!.visible) (it.whoClicked as Player).showOnlinePlayers()
             else (it.whoClicked as Player).hideOnlinePlayers()
         }}
     }
 
     private fun ItemStack?.isToggleItem(): Boolean = this?.itemMeta?.name?.contains(Text.players) == true
-    private fun ItemStack?.toggle() {
-        this!!
+    private fun ItemStack.toggle() {
         if (!isToggleItem()) return
 
         this.type = if (visible) Materials.hidden else Materials.visible // call this before the line below !
