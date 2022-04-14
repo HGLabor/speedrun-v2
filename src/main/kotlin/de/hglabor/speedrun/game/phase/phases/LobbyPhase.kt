@@ -1,8 +1,6 @@
 package de.hglabor.speedrun.game.phase.phases
 
-import de.dytanic.cloudnet.driver.CloudNetDriver
 import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
-import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
@@ -18,18 +16,17 @@ import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.KSpigotRunnable
 import net.axay.kspigot.runnables.task
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.litote.kmongo.findOne
 
 class LobbyPhase : GamePhase(0, -1, -1) {
     init {
         updateHolograms()
     }
-    var lifetimeRecordHologram: Hologram? = null
+    private var lifetimeRecordHologram: Hologram? = null
     fun updateHolograms() {
         lifetimeRecordHologram?.remove()
         val record = SpeedrunDB.recordsCollection.findOne()
@@ -44,6 +41,8 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun startIngamePhase() {}
     override fun getScoreboardHeading(): String = "Leave"
     override fun getScoreboardContent(): String = "${ChatColor.RED}/hub"
+
+    override fun hasLeaveItem() = true
 
     private var task: KSpigotRunnable? = null
 
@@ -106,8 +105,6 @@ class LobbyPhase : GamePhase(0, -1, -1) {
         }
     }
 
-    private val leaveItem = namedItem(Material.RED_BED, "${KColors.RED}${KColors.BOLD}Leave")
-
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         if (!hasStarted && UserList.size >= Config.MIN_PLAYERS.getInt()) {
@@ -121,26 +118,6 @@ class LobbyPhase : GamePhase(0, -1, -1) {
             }
         }
         PLUGIN.updateScoreboards()
-
-        event.player.inventory.setItem(8, leaveItem)
-    }
-
-    private val playerManager = CloudNetDriver.getInstance().servicesRegistry.getFirstService(IPlayerManager::class.java)
-
-    @EventHandler
-    fun onInteract(event: PlayerInteractEvent) {
-        if (event.item?.isSimilar(leaveItem) == true) {
-            event.cancel()
-            playerManager.getPlayerExecutor(event.player.uniqueId).connectToFallback()
-        }
-    }
-
-    @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
-        if (event.currentItem?.isSimilar(leaveItem) == true) {
-            event.cancel()
-            playerManager.getPlayerExecutor(event.whoClicked.uniqueId).connectToFallback()
-        }
     }
 
     @EventHandler

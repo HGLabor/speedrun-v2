@@ -6,6 +6,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
+import de.hglabor.speedrun.player.closeAndClearInvExceptVisibility
 import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
 import de.hglabor.utils.kutils.*
 import de.hglabor.utils.noriskutils.ItemBuilder
@@ -53,6 +54,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     override fun onRenew(player: Player): Boolean {
         if (ingameNotFinished(player)) {
+            player.closeAndClearInvExceptVisibility()
             items(player)
             return true
         }

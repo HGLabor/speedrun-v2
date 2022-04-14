@@ -23,6 +23,8 @@ class WinPhase : GamePhase(0, -1, -1) {
     private val winners = sortPlayersBestTime()
     private var winTask: KSpigotRunnable? = null
 
+    override fun hasLeaveItem() = true
+
     init {
         // Save record to database
         val winner = winners[0]

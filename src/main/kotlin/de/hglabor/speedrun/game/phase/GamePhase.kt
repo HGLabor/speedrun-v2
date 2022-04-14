@@ -1,5 +1,7 @@
 package de.hglabor.speedrun.game.phase
 
+import de.dytanic.cloudnet.driver.CloudNetDriver
+import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
@@ -7,6 +9,7 @@ import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.broadcastLine
 import de.hglabor.speedrun.worlds.Worlds
 import de.hglabor.utils.kutils.*
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.actionBar
@@ -16,7 +19,11 @@ import net.axay.kspigot.runnables.*
 import org.bukkit.*
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import java.util.*
 
 abstract class GamePhase(private var rounds: Int = 1, private var preparationDuration: Int, private var roundDuration: Int) : Listener {
@@ -31,7 +38,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     }
     var formattedTime: String = ""
     var roundNumber = 0
-    var startMillis: Long? = null
+    private var startMillis: Long? = null
     val world by lazy { Worlds[state().name]!! }
     private val spawn by lazy { world.spawnLocation }
 
@@ -42,6 +49,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     }
 
     init {
+        @Suppress("LeakingThis")
         server.pluginManager.registerEvents(this, PLUGIN) // Register this as event listener
 
         // Display title
@@ -53,6 +61,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
             UserList.players.forEach { player ->
                 player.playSound(Sound.ENTITY_SHULKER_TELEPORT)
                 player.survival()
+                if (hasLeaveItem()) player.inventory.setItem(8, leaveItem)
             }
             if (roundDuration != -1) startRoundTask()
         }
@@ -62,6 +71,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     open fun tpPlayers() = UserList.players.forEach { it.tpSpawn() }
 
     open fun buildingAllowed() = false
+    open fun hasLeaveItem() = false
 
     open fun onRenew(player: Player): Boolean = false
     open fun onStart(player: Player): Boolean = false
@@ -147,8 +157,6 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
 
     abstract fun state(): GameState
 
-    fun isIngame(): Boolean = activePhase == Phase.INGAME
-
     abstract fun startPreparationPhase()
     abstract fun startIngamePhase()
     abstract fun getScoreboardHeading(): String
@@ -159,7 +167,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         currentTask?.cancel()
     }
 
-    /** Get's called by subclass when a player has finished */
+    /** Gets called by subclass when a player has finished */
     fun finish(uuid: UUID) = with(player(uuid)!!) {
         // Do everything with the player context
         if (finishedPlayers.contains(uuid)) return
@@ -235,5 +243,33 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
         }
     }
 
-    fun ingameNotFinished(player: HumanEntity): Boolean = player.gameMode != GameMode.SPECTATOR && isIngame()
+    fun ingameNotFinished(player: HumanEntity): Boolean = player.gameMode != GameMode.SPECTATOR && activePhase == Phase.INGAME
+
+
+    // Leave item
+
+    private val leaveItem = namedItem(Material.RED_BED, "${KColors.RED}${KColors.BOLD}Leave")
+
+    @EventHandler
+    fun handlePlayerJoinForLeaveItem(event: PlayerJoinEvent) {
+        if (hasLeaveItem()) event.player.inventory.setItem(8, leaveItem)
+    }
+
+    private val playerManager = CloudNetDriver.getInstance().servicesRegistry.getFirstService(IPlayerManager::class.java)
+
+    @EventHandler
+    fun handleInteractForLeaveItem(event: PlayerInteractEvent) {
+        if (hasLeaveItem() && event.item?.isSimilar(leaveItem) == true) {
+            event.cancel()
+            playerManager.getPlayerExecutor(event.player.uniqueId).connectToFallback()
+        }
+    }
+
+    @EventHandler
+    fun handleInventoryClickForLeaveItem(event: InventoryClickEvent) {
+        if (hasLeaveItem() && event.currentItem?.isSimilar(leaveItem) == true) {
+            event.cancel()
+            playerManager.getPlayerExecutor(event.whoClicked.uniqueId).connectToFallback()
+        }
+    }
 }

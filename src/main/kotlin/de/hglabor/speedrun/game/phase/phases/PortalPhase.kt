@@ -5,6 +5,7 @@ import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
 import de.hglabor.speedrun.player.UserList
+import de.hglabor.speedrun.player.closeAndClearInvExceptVisibility
 import de.hglabor.speedrun.worlds.*
 import de.hglabor.utils.kutils.addAll
 import de.hglabor.utils.kutils.stack
@@ -38,6 +39,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
         spawns[player.uniqueId]?.let {
             pastePortal(it, requirePortalClipboard())
             player.teleport(it)
+            player.closeAndClearInvExceptVisibility()
             items(player)
             SoundUtils.playTeleportSound(player)
             return true

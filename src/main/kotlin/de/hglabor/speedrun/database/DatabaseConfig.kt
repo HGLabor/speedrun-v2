@@ -8,10 +8,10 @@ object DatabaseConfig {
     private var file = Paths.get(PLUGIN.dataFolder.parentFile.toString(), "mongodb", "MongoDB.yml").toFile()
     private var yamlConfiguration = YamlConfiguration.loadConfiguration(file)
 
-    lateinit var host: String
-    var port = 0
-    lateinit var username: String
-    lateinit var password: String
+    private lateinit var host: String
+    private var port = 0
+    private lateinit var username: String
+    private lateinit var password: String
     lateinit var database: String
 
     fun loadConfig() {

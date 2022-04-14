@@ -40,7 +40,6 @@ class Speedrun : KSpigot() {
         UserList.init()
 
         mainListener()
-        lobbyListener()
         joinListener()
         quitListener()
 

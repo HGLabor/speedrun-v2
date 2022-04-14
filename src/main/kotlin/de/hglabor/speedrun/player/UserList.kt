@@ -21,13 +21,18 @@ object UserList : HashMap<UUID, SpeedRunner>() {
 
     fun clearAndCloseAllInvs() {
         players.forEach {
-            val visibilityItem = it.inventory.getItem(PlayerVisibility.SLOT)
-            it.closeAndClearInv()
-            it.inventory.setItem(PlayerVisibility.SLOT, visibilityItem)
+            it.closeAndClearInvExceptVisibility()
         }
     }
 
     fun get(player: Player) = get(player.uniqueId)
 
     val players get(): List<Player> = keys.mapNotNull { player(it) }
+}
+
+fun Player.closeAndClearInvExceptVisibility() {
+    val visibilityItem = inventory.getItem(PlayerVisibility.SLOT)
+    closeAndClearInv()
+    inventory.setItem(PlayerVisibility.SLOT, visibilityItem)
+
 }

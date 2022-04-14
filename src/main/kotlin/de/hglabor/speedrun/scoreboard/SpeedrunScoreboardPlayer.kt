@@ -9,8 +9,8 @@ import org.bukkit.scoreboard.Scoreboard
 import java.util.*
 
 open class SpeedrunScoreboardPlayer(private val uuid: UUID) : ScoreboardPlayer {
-    var mScoreboard: Scoreboard? = null
-    var mObjective: Objective? = null
+    private var mScoreboard: Scoreboard? = null
+    private var mObjective: Objective? = null
     override fun getScoreboard(): Scoreboard? = mScoreboard
     override fun setScoreboard(scoreboard: Scoreboard?) { mScoreboard = scoreboard }
     override fun getObjective(): Objective? = mObjective

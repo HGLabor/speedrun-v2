@@ -27,7 +27,7 @@ object PlayerVisibility {
         val hidden =  "$players ${KColors.ORANGE}HIDDEN"
     }
 
-    val ITEM: ItemStack = itemStack(Material.SOUL_TORCH) {
+    private val ITEM: ItemStack = itemStack(Material.SOUL_TORCH) {
         meta { name = Text.visible}
     }
 

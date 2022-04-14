@@ -15,7 +15,7 @@ class SpeedRunner(uuid: UUID) : SpeedrunScoreboardPlayer(uuid) {
         PLAYER, SPECTATOR
     }
 
-    fun scoreboardNull(): Boolean = mScoreboard == null
+    fun scoreboardNull(): Boolean = scoreboard == null
 
     init {
         status = Status.PLAYER
