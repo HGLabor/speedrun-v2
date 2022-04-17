@@ -4,6 +4,7 @@ import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
+import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.utils.kutils.*
 import net.axay.kspigot.chat.KColors
@@ -65,7 +66,7 @@ class CrystalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.C
     }
 
     override fun getScoreboardHeading(): String = "Amount"
-    override fun getScoreboardContent(): String = "${ChatColor.GOLD}${crystalBlocks.size}"
+    override fun getScoreboardContent(player: SpeedRunner): String = "${ChatColor.GOLD}${crystalBlocks.size}"
 
     override fun broadcastRoundInfo() {
         grayBroadcast("$PREFIX Destroy all ${crystalBlocks.size.toString().col("aqua")} Crystals")

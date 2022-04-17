@@ -85,7 +85,7 @@ class WinPhase : GamePhase(0, -1, -1) {
     override fun startIngamePhase() {}
     override fun getScoreboardHeading(): String = "Winner:"
     @Suppress("DEPRECATION")
-    override fun getScoreboardContent(): String = "${KColors.AQUA}${winners[0].player.displayName}"
+    override fun getScoreboardContent(player: SpeedRunner): String = "${KColors.AQUA}${winners[0].player.displayName}"
 
     override fun state() = GameState.Win
 

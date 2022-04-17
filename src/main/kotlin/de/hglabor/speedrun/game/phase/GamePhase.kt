@@ -5,6 +5,7 @@ import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager
 import de.hglabor.speedrun.PLUGIN
 import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
+import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.speedrun.utils.broadcastLine
 import de.hglabor.speedrun.worlds.Worlds
@@ -21,6 +22,8 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -70,7 +73,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     protected fun Player.tpSpawn() = this.teleport(this@GamePhase.spawn)
     open fun tpPlayers() = UserList.players.forEach { it.tpSpawn() }
 
-    open fun buildingAllowed() = false
+    open fun buildingAllowed(evt: BlockEvent) = false
     open fun hasLeaveItem() = false
 
     open fun onRenew(player: Player): Boolean = false
@@ -160,7 +163,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
     abstract fun startPreparationPhase()
     abstract fun startIngamePhase()
     abstract fun getScoreboardHeading(): String
-    abstract fun getScoreboardContent(): String
+    abstract fun getScoreboardContent(player: SpeedRunner): String
 
     open fun stop() {
         unregister() // Unregister this as event listener
@@ -272,4 +275,7 @@ abstract class GamePhase(private var rounds: Int = 1, private var preparationDur
             playerManager.getPlayerExecutor(event.whoClicked.uniqueId).connectToFallback()
         }
     }
+
+    /** @return false to cancel event */
+    open fun onDamage(player: Player, evt: EntityDamageEvent) = false
 }

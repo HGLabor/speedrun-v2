@@ -27,11 +27,12 @@ enum class Config(private val path: String, value: Any) {
     PORTAL_SCHEMATIC("portalSchem", "lavaArena_03"),
 
     // Blazes
-    BLAZES_INGAME_TIME("blazesIngame", 60),
+    BLAZES_INGAME_TIME("blazesIngame", 120),
     BLAZES_SCHEMATIC("blazesSchem", "blazeSpawner_02"),
-    BLAZES_SPAWNER_OFFSET("blazesSchemSpawnerOffset", listOf(0, 4, -10)), // x, y, z offset from spawn location to spawner location
+    BLAZES_SPAWNER_OFFSET("blazesSchemSpawnerOffset", listOf(0, 3, -9)), // x, y, z offset from spawn location to spawner location
     BLAZES_MIN_SPAWN("blazesMinSpawn", 1),
     BLAZES_MAX_SPAWN("blazesMaxSpawn", 3),
+    BLAZES_POINTS_NEEDED("blazesPointsNeeded", 10),
 
     // Stronghold
     STRONGHOLD_INGAME_TIME("strongholdIngame", 60),
@@ -68,5 +69,5 @@ enum class Config(private val path: String, value: Any) {
     fun getBoolean(): Boolean = this.configValue as Boolean
     fun getString(): String = this.configValue as String
     @Suppress("UNCHECKED_CAST") fun getStringList(): ArrayList<String> = this.configValue as ArrayList<String>? ?: ArrayList()
-    @Suppress("UNCHECKED_CAST") fun getIntList(): ArrayList<Int> = this.configValue as ArrayList<Int>? ?: ArrayList()
+    @Suppress("UNCHECKED_CAST") fun getIntList(): List<Int> = this.configValue as List<Int>? ?: listOf()
 }

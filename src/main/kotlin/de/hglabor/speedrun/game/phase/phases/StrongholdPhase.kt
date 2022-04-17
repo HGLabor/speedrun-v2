@@ -4,6 +4,7 @@ import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
+import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.utils.kutils.cancel
 import de.hglabor.utils.kutils.playSound
@@ -28,7 +29,7 @@ class StrongholdPhase : GamePhase(preparationDuration = 1, roundDuration = Confi
     override fun startIngamePhase() { items() }
 
     override fun getScoreboardHeading(): String = "Stuck?"
-    override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
+    override fun getScoreboardContent(player: SpeedRunner): String = "${ChatColor.GOLD}/renew"
     override fun state() = GameState.Stronghold
 
     private fun items() { UserList.players.forEach { items(it) } }
