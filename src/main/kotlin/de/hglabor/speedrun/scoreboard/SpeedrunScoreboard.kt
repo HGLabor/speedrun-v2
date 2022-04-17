@@ -61,7 +61,7 @@ object SpeedrunScoreboard {
             }
         }
         ScoreboardFactory.updateEntry(player, phaseHeadingName, GamePhaseManager.currentPhase.getScoreboardHeading())
-        ScoreboardFactory.updateEntry(player, phaseName, GamePhaseManager.currentPhase.getScoreboardContent())
+        ScoreboardFactory.updateEntry(player, phaseName, GamePhaseManager.currentPhase.getScoreboardContent(player))
         ScoreboardFactory.updateEntry(player, timeHeadingName, GamePhaseManager.currentPhase.timeHeading)
         ScoreboardFactory.updateEntry(player, timeName, "${ChatColor.YELLOW}${GamePhaseManager.currentPhase.formattedTime}")
     }

@@ -5,8 +5,7 @@ import de.hglabor.speedrun.config.PREFIX
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
-import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.player.closeAndClearInvExceptVisibility
+import de.hglabor.speedrun.player.*
 import de.hglabor.speedrun.worlds.CRAFTING_SPAWNS
 import de.hglabor.utils.kutils.*
 import de.hglabor.utils.noriskutils.ItemBuilder
@@ -63,7 +62,7 @@ class CraftingPhase : GamePhase(Config.CRAFTING_ROUNDS.getInt(), Config.CRAFTING
 
     override fun state() = GameState.Crafting
     override fun getScoreboardHeading(): String = "Item:"
-    override fun getScoreboardContent(): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "")
+    override fun getScoreboardContent(player: SpeedRunner): String = ChatColor.YELLOW.toString() + (itemToCraft?.type?.name ?: "")
     override fun onNewStart() { itemToCraft = null }
 
     override fun broadcastRoundInfo() { grayBroadcast("$PREFIX Item to craft: ${ChatColor.AQUA}${itemToCraft?.type?.name}") }

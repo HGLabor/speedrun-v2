@@ -4,8 +4,7 @@ import de.hglabor.speedrun.config.Config
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
-import de.hglabor.speedrun.player.UserList
-import de.hglabor.speedrun.player.closeAndClearInvExceptVisibility
+import de.hglabor.speedrun.player.*
 import de.hglabor.speedrun.worlds.*
 import de.hglabor.utils.kutils.addAll
 import de.hglabor.utils.kutils.stack
@@ -13,6 +12,7 @@ import de.hglabor.utils.noriskutils.SoundUtils
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.block.BlockEvent
 import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -25,7 +25,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
     override fun startIngamePhase() { items() }
 
     override fun getScoreboardHeading(): String = "Reset"
-    override fun getScoreboardContent(): String = "${ChatColor.GOLD}/renew"
+    override fun getScoreboardContent(player: SpeedRunner): String = "${ChatColor.GOLD}/renew"
     override fun state() = GameState.Portal
 
     private fun items() { UserList.players.forEach { items(it) } }
@@ -37,7 +37,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
         // When portal spawns are non-null, the clipboard is probably non-null too
         if (!ingameNotFinished(player)) return false
         spawns[player.uniqueId]?.let {
-            pastePortal(it, requirePortalClipboard())
+            pasteClipboard(it, portalClipboard()!!)
             player.teleport(it)
             player.closeAndClearInvExceptVisibility()
             items(player)
@@ -51,7 +51,7 @@ class PortalPhase : GamePhase(preparationDuration = 1, roundDuration = Config.PO
         player.teleport(spawns[player.uniqueId] ?: return)
     }
 
-    override fun buildingAllowed(): Boolean = true
+    override fun buildingAllowed(evt: BlockEvent): Boolean = true
 
     @EventHandler
     fun onPortal(event: PortalCreateEvent) = with(event) {

@@ -33,6 +33,7 @@ object UserList : HashMap<UUID, SpeedRunner>() {
 fun Player.closeAndClearInvExceptVisibility() {
     val visibilityItem = inventory.getItem(PlayerVisibility.SLOT)
     closeAndClearInv()
+    fireTicks = 0
     inventory.setItem(PlayerVisibility.SLOT, visibilityItem)
 
 }

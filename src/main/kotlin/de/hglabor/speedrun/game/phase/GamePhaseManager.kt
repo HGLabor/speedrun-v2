@@ -20,7 +20,8 @@ object GamePhaseManager {
         currentPhase = when (currentPhase.state()) {
             GameState.Lobby -> setPhase(CraftingPhase::class)
             GameState.Crafting -> setPhase(PortalPhase::class)
-            GameState.Portal -> setPhase(StrongholdPhase::class)
+            GameState.Portal -> setPhase(BlazesPhase::class)
+            GameState.Blazes -> setPhase(StrongholdPhase::class)
             GameState.Stronghold -> setPhase(CrystalPhase::class)
             GameState.Crystal -> setPhase(WinPhase::class)
             GameState.Win -> setPhase(LobbyPhase::class)

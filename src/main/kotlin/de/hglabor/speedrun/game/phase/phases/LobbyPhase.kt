@@ -9,6 +9,7 @@ import de.hglabor.speedrun.database.data.locations
 import de.hglabor.speedrun.game.GameState
 import de.hglabor.speedrun.game.phase.GamePhase
 import de.hglabor.speedrun.game.phase.GamePhaseManager
+import de.hglabor.speedrun.player.SpeedRunner
 import de.hglabor.speedrun.player.UserList
 import de.hglabor.utils.kutils.*
 import net.axay.kspigot.chat.KColors
@@ -40,7 +41,7 @@ class LobbyPhase : GamePhase(0, -1, -1) {
     override fun startPreparationPhase() {}
     override fun startIngamePhase() {}
     override fun getScoreboardHeading(): String = "Leave"
-    override fun getScoreboardContent(): String = "${ChatColor.RED}/hub"
+    override fun getScoreboardContent(player: SpeedRunner): String = "${ChatColor.RED}/hub"
 
     override fun hasLeaveItem() = true
 
