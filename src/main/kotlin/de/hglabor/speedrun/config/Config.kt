@@ -27,7 +27,7 @@ enum class Config(private val path: String, value: Any) {
     PORTAL_SCHEMATIC("portalSchem", "lavaArena_03"),
 
     // Blazes
-    BLAZES_INGAME_TIME("blazesIngame", 120),
+    BLAZES_INGAME_TIME("blazesIngame", 180),
     BLAZES_SCHEMATIC("blazesSchem", "blazeSpawner_02"),
     BLAZES_SPAWNER_OFFSET("blazesSchemSpawnerOffset", listOf(0, 3, -9)), // x, y, z offset from spawn location to spawner location
     BLAZES_MIN_SPAWN("blazesMinSpawn", 1),
